@@ -8,7 +8,7 @@ class DiscordClient {
         this.client = new Discord.Client();
         this.client.login(config.discordClient.token);
         this.client.on('ready', function() {
-            console.log("Bot discord: PacifistaBot prêt !");
+            console.log("Bot discord: PacifistaBot connecté !");
         });
         this.client.on('message', this.userMessage);
         this.client.on('guildMemberAdd', this.newGuildUser);
