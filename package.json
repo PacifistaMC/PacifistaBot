@@ -1,0 +1,25 @@
+{
+  "name": "pacifistabot_discord",
+  "version": "1.0.0",
+  "description": "Bot used for Pacifista discord community",
+  "main": "main.js",
+  "scripts": {
+    "test": "node main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FunixG/DiscordBot-Pacifista.git"
+  },
+  "keywords": [
+    "Pacifista",
+    "Minecraft",
+    "Discord",
+    "Survie"
+  ],
+  "author": "FunixGaming",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/FunixG/DiscordBot-Pacifista/issues"
+  },
+  "homepage": "https://github.com/FunixG/DiscordBot-Pacifista#readme"
+}
