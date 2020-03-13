@@ -30,6 +30,7 @@ class DiscordClient {
         if (args[0].charAt(0) === config.defaults.prefix) {
             let cmd = args[0].substr(1);
             args.shift();
+            console.log(cmd);
             switch (cmd) {
                 case 'ip':
                     message.guild.channels.cache.get(message.channel.id).send(new Discord.MessageEmbed()
@@ -80,7 +81,7 @@ class DiscordClient {
     }
 
     newBan(guild, user) {
-        const message = user.tag + " est banni du discord."
+        const message = user.tag + " est banni du discord.";
         let messageEmbed = new Discord.MessageEmbed()
             .setColor("DARK_BLUE")
             .setAuthor(user.tag, user.avatarURL())
@@ -91,7 +92,7 @@ class DiscordClient {
     }
 
     removeBan(guild, user) {
-        const message = user.tag + " n'est plus banni du discord."
+        const message = user.tag + " n'est plus banni du discord.";
         let messageEmbed = new Discord.MessageEmbed()
             .setColor("BLUE")
             .setAuthor(user.tag, user.avatarURL())
