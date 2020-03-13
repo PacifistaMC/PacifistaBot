@@ -1,8 +1,10 @@
 const fs = require('fs');
+const config = require('../.env.json');
 const logDir = 'logs/';
 
 function getDateData() {
     const now = new Date();
+    now.setHours(now.getHours() + config.defaults.timezoneConfig);
     return {
         time: (now.getHours() < 10 ? '0' + now.getHours().toString() : now.getHours().toString()) + ':' +
             (now.getMinutes() < 10 ? '0' + now.getMinutes().toString() : now.getMinutes().toString()) + ':' +

@@ -103,6 +103,7 @@ class DiscordClient {
 }
 
 function getDate(creationDate) {
+    creationDate.setHours(creationDate.getHours() + config.defaults.timezoneConfig);
     return (creationDate.getDate() < 10 ? '0' + creationDate.getDate() : creationDate.getDate()) + '/' +
         (creationDate.getMonth() < 10 ? '0' + (creationDate.getMonth() + 1).toString() : (creationDate.getMonth() + 1).toString()) + '/' +
         creationDate.getFullYear() +
