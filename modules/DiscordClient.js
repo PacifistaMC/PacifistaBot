@@ -18,7 +18,6 @@ class DiscordClient {
     }
 
     userMessage(message) {
-        console.log(message.channel.type);
         if (message.channel.type !== "text") return;
         const user = message.author;
         let text = message.content;
