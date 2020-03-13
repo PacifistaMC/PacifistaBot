@@ -27,7 +27,6 @@ class DiscordClient {
         text = text.replace(/\s\s+/g, ' ');
         text = text.toLowerCase();
         let args = text.split(' ');
-        console.log("|" + args[0].charAt(0) + "|");
         if (args[0].charAt(0) === config.defaults.prefix) {
             let cmd = args[0].substr(1);
             args.shift();
