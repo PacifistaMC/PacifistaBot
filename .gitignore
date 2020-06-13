@@ -1,5 +1,6 @@
-node_modules/
 .idea
-.env.json
-package-lock.json
 logs/
+target/
+data/
+data/botConfiguration.json
+pacifistabot-discord.iml
