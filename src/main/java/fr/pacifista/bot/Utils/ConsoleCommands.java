@@ -59,7 +59,7 @@ public class ConsoleCommands {
     public static void getLogs(List<String> args) {
         String dateFormated;
         if (args.size() < 1) {
-            DateFormat dateFormat = new SimpleDateFormat("d.MM.yyyy");
+            DateFormat dateFormat = new SimpleDateFormat("d-MM-yyyy");
             Date date = new Date();
             dateFormated = dateFormat.format(date);
         } else

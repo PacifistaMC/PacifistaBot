@@ -16,7 +16,7 @@ public class Log {
 
     public static void logMessage(User user, TextChannel textChannel, String message) {
         new Thread(() -> {
-            DateFormat dateFormat = new SimpleDateFormat("d.MM.yyyy");
+            DateFormat dateFormat = new SimpleDateFormat("d-MM-yyyy");
             DateFormat timeFormat = new SimpleDateFormat("HH:mm");
             Date date = new Date();
             String dateFormated = dateFormat.format(date);
