@@ -13,7 +13,7 @@ import static fr.pacifista.bot.Main.dataFolder;
 
 public class BotConfiguration {
 
-    private static final String configVersion = "1.2";
+    private static final String configVersion = "1.2.2";
     private static final File configFile = new File(dataFolder, "botConfiguration.json");
 
     public String discordToken;
@@ -21,9 +21,12 @@ public class BotConfiguration {
     public String logID;
     public String playerID;
     public String adminID;
+    public String pacifistaChatID;
 
     public String pacifistaAddress;
     public int pacifistaPort;
+
+    public int botSocketPort;
 
     public String configVersionSet;
 
@@ -37,14 +40,18 @@ public class BotConfiguration {
         this.bienvenueID = scanner.nextLine();
         System.out.println(ConsoleColors.GREEN + "Channel id de log: ");
         this.logID = scanner.nextLine();
+        System.out.println(ConsoleColors.GREEN + "Channel id du chat pacifista: ");
+        this.pacifistaChatID = scanner.nextLine();
         System.out.println(ConsoleColors.GREEN + "Group id du grade joueur: ");
         this.playerID = scanner.nextLine();
         System.out.println(ConsoleColors.GREEN + "Group id du grade admin: ");
         this.adminID = scanner.nextLine();
+        System.out.println(ConsoleColors.GREEN + "Port du socket du bot: ");
+        this.botSocketPort = Integer.parseInt(scanner.nextLine());
         System.out.println(ConsoleColors.GREEN + "Adresse du socket du serveur minecraft: ");
         this.pacifistaAddress = scanner.nextLine();
         System.out.println(ConsoleColors.GREEN + "Port du socket du serveur minecraft: " + ConsoleColors.WHITE);
-        this.pacifistaPort = scanner.nextInt();
+        this.pacifistaPort = Integer.parseInt(scanner.nextLine());
         this.configVersionSet = configVersion;
     }
 

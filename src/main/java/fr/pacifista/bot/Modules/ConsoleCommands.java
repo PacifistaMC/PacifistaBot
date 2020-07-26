@@ -52,8 +52,7 @@ public class ConsoleCommands {
 
     public static void stop(List<String> args) {
         RUNNING = false;
-        System.out.println("Arrêt du bot");
-        System.exit(0);
+        Main.instance.stop();
     }
 
     public static void getLogs(List<String> args) {
