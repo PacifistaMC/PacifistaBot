@@ -26,7 +26,7 @@ public class Bot {
     private void setupBot() throws LoginException, InterruptedException {
         JDABuilder builder = JDABuilder.createDefault(botConfiguration.discordToken);
         builder.enableIntents(GatewayIntent.GUILD_MEMBERS);
-        builder.setActivity(Activity.of(Activity.ActivityType.WATCHING, "Le serveur", "https://pacifista.fr"));
+        builder.setActivity(Activity.of(Activity.ActivityType.WATCHING, "Pacifista", "https://pacifista.fr"));
         builder.addEventListeners(new UserMessage(), new UserJoinLeave());
         this.api = builder.build().awaitReady();
     }
