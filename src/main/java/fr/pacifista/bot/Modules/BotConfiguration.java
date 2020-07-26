@@ -13,14 +13,13 @@ import static fr.pacifista.bot.Main.dataFolder;
 
 public class BotConfiguration {
 
-    private static final String configVersion = "1.0";
+    private static final String configVersion = "1.1";
     private static final File configFile = new File(dataFolder, "botConfiguration.json");
 
     public String discordToken;
     public String bienvenueID;
     public String logID;
-    public String twitchID;
-    public String followerID;
+    public String playerID;
     public String adminID;
 
     public String configVersionSet;
@@ -29,16 +28,14 @@ public class BotConfiguration {
     private BotConfiguration(boolean genConf) {
         if (!genConf) return;
         Scanner scanner = new Scanner(System.in);
-        System.out.println(ConsoleColors.GREEN + "Veuillez entrer le token du fr.pacifista.bot discord: ");
+        System.out.println(ConsoleColors.GREEN + "Veuillez entrer le token du bot discord: ");
         this.discordToken = scanner.nextLine();
         System.out.println(ConsoleColors.GREEN + "Channel id de bienvenue: ");
         this.bienvenueID = scanner.nextLine();
         System.out.println(ConsoleColors.GREEN + "Channel id de log: ");
         this.logID = scanner.nextLine();
-        System.out.println(ConsoleColors.GREEN + "Channel id de twitch: ");
-        this.twitchID = scanner.nextLine();
-        System.out.println(ConsoleColors.GREEN + "Group id du grade follower: ");
-        this.followerID = scanner.nextLine();
+        System.out.println(ConsoleColors.GREEN + "Group id du grade joueur: ");
+        this.playerID = scanner.nextLine();
         System.out.println(ConsoleColors.GREEN + "Group id du grade admin: " + ConsoleColors.WHITE);
         this.adminID = scanner.nextLine();
         this.configVersionSet = configVersion;
@@ -65,7 +62,7 @@ public class BotConfiguration {
         if (!dataFolder.exists() && !dataFolder.mkdir())
             throw new IOException("Error while creating data folder");
         if (!configFile.exists()) {
-            System.out.println(ConsoleColors.YELLOW_BOLD + "La configuration du fr.pacifista.bot n'existe pas. Veuillez configurer le fr.pacifista.bot." + ConsoleColors.WHITE);
+            System.out.println(ConsoleColors.YELLOW_BOLD + "La configuration du bot n'existe pas. Veuillez configurer le bot" + ConsoleColors.WHITE);
             BotConfiguration config = new BotConfiguration(true);
             config.saveConfig();
             return config;
@@ -74,7 +71,7 @@ public class BotConfiguration {
             Gson gson = new Gson();
             BotConfiguration config = gson.fromJson(fileContent, BotConfiguration.class);
             if (!config.configVersionSet.equals(configVersion)) {
-                System.out.println(ConsoleColors.YELLOW_BOLD + "La configuration du fr.pacifista.bot à changé. Veuillez reconfigurer le fr.pacifista.bot." + ConsoleColors.WHITE);
+                System.out.println(ConsoleColors.YELLOW_BOLD + "La configuration du bot à changé. Veuillez reconfigurer le bot" + ConsoleColors.WHITE);
                 config = new BotConfiguration(true);
                 config.saveConfig();
             }

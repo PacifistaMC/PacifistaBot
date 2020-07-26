@@ -17,7 +17,7 @@ public class Commands {
         embedBuilder.setDescription("Serveur minecraft survie");
         embedBuilder.addField("Site web", "https://pacifista.fr", true);
         embedBuilder.addField("IP de connexion", "play.pacifista.fr", true);
-        embedBuilder.addField("Version", "1.15.2", true);
+        embedBuilder.addField("Version", "1.16.1", true);
         embedBuilder.setColor(new Color(0, 168, 232));
 
         channel.sendMessage(embedBuilder.build()).queue();

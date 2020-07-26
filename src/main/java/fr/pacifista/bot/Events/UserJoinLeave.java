@@ -54,7 +54,7 @@ public class UserJoinLeave extends ListenerAdapter {
             }
         }
 
-        Role role = guild.getRoleById(Main.bot.getConfig().followerID);
+        Role role = guild.getRoleById(Main.bot.getConfig().playerID);
         if (role != null)
             guild.addRoleToMember(event.getMember(), role).queue();
 

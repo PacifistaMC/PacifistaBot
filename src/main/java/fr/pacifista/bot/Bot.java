@@ -26,7 +26,7 @@ public class Bot {
     private void setupBot() throws LoginException, InterruptedException {
         JDABuilder builder = JDABuilder.createDefault(botConfiguration.discordToken);
         builder.enableIntents(GatewayIntent.GUILD_MEMBERS);
-        builder.setActivity(Activity.of(Activity.ActivityType.WATCHING, "twitch.tv/funixgaming", "https://twitch.tv/funixgaming"));
+        builder.setActivity(Activity.of(Activity.ActivityType.WATCHING, "Le serveur", "https://pacifista.fr"));
         builder.addEventListeners(new UserMessage(), new UserJoinLeave());
         this.api = builder.build().awaitReady();
     }
@@ -41,7 +41,7 @@ public class Bot {
             bot = new Bot(botConfig);
             return bot;
         } catch (IOException | LoginException | NoSuchElementException | InterruptedException e) {
-            System.err.println("Une erreur est survenue lors de la connection du fr.pacifista.bot. Veuillez recommencer.");
+            System.err.println("Une erreur est survenue lors de la connection du bot Veuillez recommencer.");
             System.err.println(ConsoleColors.RED + e.getMessage());
             System.exit(84);
             BotConfiguration.removeConfigFile();
