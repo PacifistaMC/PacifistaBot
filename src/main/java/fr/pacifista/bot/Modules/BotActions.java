@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.entities.TextChannel;
 public class BotActions {
 
     public static void sendMessageToChannel(String message, String channelID) {
-        Guild guild = Main.bot.getApi().getGuilds().get(0);
+        Guild guild = Main.instance.getBot().getApi().getGuilds().get(0);
         TextChannel channel = guild.getTextChannelById(channelID);
         if (channel == null)
             return;
@@ -16,7 +16,7 @@ public class BotActions {
     }
 
     public static void sendMessageToChannel(MessageEmbed message, String channelID) {
-        Guild guild = Main.bot.getApi().getGuilds().get(0);
+        Guild guild = Main.instance.getBot().getApi().getGuilds().get(0);
         TextChannel channel = guild.getTextChannelById(channelID);
         if (channel == null)
             return;

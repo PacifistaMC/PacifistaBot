@@ -4,6 +4,8 @@ import fr.pacifista.bot.Events.UserJoinLeave;
 import fr.pacifista.bot.Events.UserMessage;
 import fr.pacifista.bot.Modules.BotConfiguration;
 import fr.pacifista.bot.Utils.ConsoleColors;
+import fr.pacifista.bot.minecraftLink.PacifistaInfos;
+import fr.pacifista.bot.minecraftLink.PacifistaSocket;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -16,7 +18,7 @@ import java.util.NoSuchElementException;
 public class Bot {
 
     private JDA api;
-    private final BotConfiguration botConfiguration;
+    private BotConfiguration botConfiguration;
 
     private Bot(BotConfiguration botConfiguration) throws LoginException, InterruptedException {
         this.botConfiguration = botConfiguration;
@@ -26,13 +28,39 @@ public class Bot {
     private void setupBot() throws LoginException, InterruptedException {
         JDABuilder builder = JDABuilder.createDefault(botConfiguration.discordToken);
         builder.enableIntents(GatewayIntent.GUILD_MEMBERS);
-        builder.setActivity(Activity.of(Activity.ActivityType.WATCHING, "Pacifista", "https://pacifista.fr"));
         builder.addEventListeners(new UserMessage(), new UserJoinLeave());
         this.api = builder.build().awaitReady();
+        refreshActivityMsg();
     }
 
-    public JDA getApi() { return this.api; }
-    public BotConfiguration getConfig() { return this.botConfiguration; }
+    public JDA getApi() {
+        return this.api;
+    }
+
+    public void refreshActivityMsg() {
+        PacifistaInfos pacifistaInfos = PacifistaSocket.getInfos(botConfiguration);
+        Activity activity;
+
+        if (pacifistaInfos.getPlayerCount() < 0) {
+
+            activity = Activity.of(Activity.ActivityType.WATCHING, "Serveur hors ligne", "https://pacifista.fr");
+        } else {
+            activity = Activity.of(Activity.ActivityType.WATCHING, pacifistaInfos.getPlayerCount() + " joueurs", "https://pacifista.fr");
+        }
+        this.api.getPresence().setActivity(activity);
+    }
+
+    public BotConfiguration getConfig() {
+        return this.botConfiguration;
+    }
+
+    public void reloadConfig() {
+        try {
+            this.botConfiguration = BotConfiguration.getConfiguration();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static Bot initBot() {
         Bot bot;

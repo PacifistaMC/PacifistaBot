@@ -1,4 +1,4 @@
-package fr.pacifista.bot.Utils;
+package fr.pacifista.bot.Modules;
 
 import fr.pacifista.bot.Main;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -66,7 +66,7 @@ public class ConsoleCommands {
             dateFormated = args.get(0);
         System.out.println("Envoi des logs : " + dateFormated + ".log");
 
-        TextChannel logChannel = Main.bot.getApi().getTextChannelById(Main.bot.getConfig().logID);
+        TextChannel logChannel = Main.instance.getBot().getApi().getTextChannelById(Main.instance.getBot().getConfig().logID);
         if (logChannel == null)
             return;
         File logFile = new File(Main.dataFolder, "logs/" + dateFormated + ".log");
@@ -77,5 +77,9 @@ public class ConsoleCommands {
             logChannel.sendMessage(err).queue();
             System.out.println(err);
         }
+    }
+
+    public static void reload(List<String> args) {
+        Main.instance.reload();
     }
 }

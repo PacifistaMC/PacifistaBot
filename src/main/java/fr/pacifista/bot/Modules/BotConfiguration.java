@@ -13,7 +13,7 @@ import static fr.pacifista.bot.Main.dataFolder;
 
 public class BotConfiguration {
 
-    private static final String configVersion = "1.1";
+    private static final String configVersion = "1.2";
     private static final File configFile = new File(dataFolder, "botConfiguration.json");
 
     public String discordToken;
@@ -21,6 +21,9 @@ public class BotConfiguration {
     public String logID;
     public String playerID;
     public String adminID;
+
+    public String pacifistaAddress;
+    public int pacifistaPort;
 
     public String configVersionSet;
 
@@ -36,8 +39,12 @@ public class BotConfiguration {
         this.logID = scanner.nextLine();
         System.out.println(ConsoleColors.GREEN + "Group id du grade joueur: ");
         this.playerID = scanner.nextLine();
-        System.out.println(ConsoleColors.GREEN + "Group id du grade admin: " + ConsoleColors.WHITE);
+        System.out.println(ConsoleColors.GREEN + "Group id du grade admin: ");
         this.adminID = scanner.nextLine();
+        System.out.println(ConsoleColors.GREEN + "Adresse du socket du serveur minecraft: ");
+        this.pacifistaAddress = scanner.nextLine();
+        System.out.println(ConsoleColors.GREEN + "Port du socket du serveur minecraft: " + ConsoleColors.WHITE);
+        this.pacifistaPort = scanner.nextInt();
         this.configVersionSet = configVersion;
     }
 

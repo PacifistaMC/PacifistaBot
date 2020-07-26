@@ -1,5 +1,7 @@
 package fr.pacifista.bot.Modules;
 
+import fr.pacifista.bot.Main;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -9,10 +11,9 @@ public class ScheduledTasks {
         new Thread(() -> {
             Timer timer = new Timer();
 
-            //new NotificationLive(timer, 10000);
+            new RefreshBotActivity(timer, 10000);
         }).start();
     }
-
 }
 
 abstract class Task {
@@ -26,4 +27,16 @@ abstract class Task {
     }
 
     abstract void task();
+}
+
+class RefreshBotActivity extends Task {
+
+    RefreshBotActivity(Timer timer, int period) {
+        super(timer, period);
+    }
+
+    @Override
+    void task() {
+        Main.instance.getBot().refreshActivityMsg();
+    }
 }

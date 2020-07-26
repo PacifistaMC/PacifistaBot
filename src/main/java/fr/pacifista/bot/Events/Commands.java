@@ -1,7 +1,7 @@
 package fr.pacifista.bot.Events;
 
 import fr.pacifista.bot.Main;
-import fr.pacifista.bot.Utils.ConsoleCommands;
+import fr.pacifista.bot.Modules.ConsoleCommands;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
@@ -24,7 +24,7 @@ public class Commands {
     }
 
     public static void logs(User user, TextChannel channel, List<String> args) {
-        if (!channel.getId().equals(Main.bot.getConfig().logID)) return;
+        if (!channel.getId().equals(Main.instance.getBot().getConfig().logID)) return;
         ConsoleCommands.getLogs(args);
     }
 
