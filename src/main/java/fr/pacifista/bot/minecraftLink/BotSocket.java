@@ -47,8 +47,7 @@ public class BotSocket extends Thread {
             if (e instanceof SocketException) {
                 SocketException socketException = (SocketException) e;
                 String message = socketException.getMessage();
-                if (message == null) return;
-                message.equalsIgnoreCase("Socket closed");
+                if (message != null && message.equalsIgnoreCase("Socket closed")) return;
             }
             e.printStackTrace();
         } finally {
