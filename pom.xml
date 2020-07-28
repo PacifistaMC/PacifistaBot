@@ -6,7 +6,7 @@
 
     <groupId>fr.pacifista.bot</groupId>
     <artifactId>pacifistabot-discord</artifactId>
-    <version>1.2</version>
+    <version>1.2.1</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>

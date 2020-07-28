@@ -128,7 +128,7 @@ class Client implements Runnable {
                     char[] str = response.toCharArray();
                     StringBuilder buffer = new StringBuilder();
                     for (int i = 14; i < str.length; ++i) {
-                        if (str[i - 1] != '&' && str[i] != '&')
+                        if (str[i - 1] != '§' && str[i] != '§')
                             buffer.append(str[i]);
                     }
                     BotActions.sendMessageToChannel(buffer.toString(), Main.instance.getBot().getConfig().pacifistaChatID);

@@ -3,9 +3,11 @@ package fr.pacifista.bot.minecraftLink;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import fr.pacifista.bot.Modules.BotConfiguration;
+import fr.pacifista.bot.Utils.ConsoleColors;
 
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.SocketException;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -31,7 +33,9 @@ public class PacifistaInfos {
             this.playerCount = json.get("connectedPlayers").getAsInt();
             this.maxPlayers = json.get("maxPlayers").getAsInt();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(ConsoleColors.RED + e.getMessage() + ConsoleColors.WHITE);
+            if (!(e instanceof SocketException))
+                e.printStackTrace();
         } finally {
             try {
                 if (reader != null)
@@ -39,7 +43,9 @@ public class PacifistaInfos {
                 if (http != null)
                     http.disconnect();
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println(ConsoleColors.RED + e.getMessage() + ConsoleColors.WHITE);
+                if (!(e instanceof SocketException))
+                    e.printStackTrace();
             }
         }
     }
