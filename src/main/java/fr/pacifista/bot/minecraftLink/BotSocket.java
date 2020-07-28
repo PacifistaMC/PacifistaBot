@@ -151,10 +151,6 @@ class Client implements Runnable {
         }
     }
 
-    private void stopSocket() {
-        isRunning = false;
-    }
-
     private String readClient() throws IOException {
         byte[] messageBytes = new byte[10000];
         int stream = reader.read(messageBytes);
