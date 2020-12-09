@@ -1,5 +1,7 @@
 package fr.pacifista.bot.modules;
 
+import fr.pacifista.bot.Bot;
+import fr.pacifista.bot.utils.BotException;
 import fr.pacifista.bot.utils.FileActions;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
@@ -15,6 +17,13 @@ public class Log {
     private static final File logFolder = new File("data", "logs");
 
     public static void logMessage(User user, TextChannel textChannel, String message) {
+        try {
+            if (textChannel.getId().equals(Bot.getConfiguration().pacifistaChatID))
+                return;
+        } catch (BotException e) {
+            e.printStackTrace();
+        }
+
         new Thread(() -> {
             DateFormat dateFormat = new SimpleDateFormat("d-MM-yyyy");
             DateFormat timeFormat = new SimpleDateFormat("HH:mm");
@@ -35,8 +44,8 @@ public class Log {
                 System.out.print(log);
                 FileActions.writeInFile(logFile, log, true);
             } catch (IOException e) {
-                System.err.println("Error on today log file.");
-                e.printStackTrace();
+                BotException botException = new BotException(e.getMessage());
+                botException.printStackTrace();
             }
         }).start();
     }

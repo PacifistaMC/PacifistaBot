@@ -15,6 +15,7 @@ public class BotException extends Exception {
 
     public static final String BOT_SESSION_NOT_EXISTS = "Le bot n'est pas initialisé. Veuillez patienter que le bot soit configuré et réessayez.";
     public static final String PACIFISTA_SOCKET_NOT_CONNECTED = "Le bot n'est pas connecté à Pacifista.";
+    public static final String ERROR_HTTP_NOT_200 = "Le serveur http n'a pas retourné un code 200";
 
     public BotException(final String message) {
         super(message);
