@@ -16,7 +16,7 @@ public class Bot {
     private static volatile Bot instance = null;
 
     private final JDA api;
-    private final BotConfiguration botConfiguration;
+    protected final BotConfiguration botConfiguration;
 
     protected Bot() throws BotException {
         instance = null;
@@ -31,25 +31,28 @@ public class Bot {
             throw new BotException(e.getMessage());
         } finally {
             instance = this;
+            refreshActivityMsg(0);
         }
     }
-
-    /*public void refreshActivityMsg() {
-        PacifistaInfos pacifistaInfos = PacifistaSocket.getInfos(botConfiguration);
-        Activity activity;
-
-        if (pacifistaInfos.getPlayerCount() < 0) {
-            activity = Activity.of(Activity.ActivityType.WATCHING, "Serveur hors ligne", "https://pacifista.fr");
-        } else {
-            activity = Activity.of(Activity.ActivityType.WATCHING, pacifistaInfos.getPlayerCount() + " joueurs", "https://pacifista.fr");
-        }
-        this.api.getPresence().setActivity(activity);
-    }*/
 
     private static Bot getInstance() throws BotException {
         if (instance == null)
             throw new BotException(BotException.BOT_SESSION_NOT_EXISTS);
         return instance;
+    }
+
+    public static void refreshActivityMsg(int players) {
+        if (instance == null)
+            return;
+
+        Activity activity;
+
+        if (players < 0) {
+            activity = Activity.of(Activity.ActivityType.WATCHING, "Serveur hors ligne", "https://pacifista.fr");
+        } else {
+            activity = Activity.of(Activity.ActivityType.WATCHING, players + " joueurs", "https://pacifista.fr");
+        }
+        instance.api.getPresence().setActivity(activity);
     }
 
     public static BotConfiguration getConfiguration() throws BotException {

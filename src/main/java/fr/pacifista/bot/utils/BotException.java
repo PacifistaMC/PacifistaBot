@@ -14,6 +14,7 @@ import java.util.Date;
 public class BotException extends Exception {
 
     public static final String BOT_SESSION_NOT_EXISTS = "Le bot n'est pas initialisé. Veuillez patienter que le bot soit configuré et réessayez.";
+    public static final String PACIFISTA_SOCKET_NOT_CONNECTED = "Le bot n'est pas connecté à Pacifista.";
 
     public BotException(final String message) {
         super(message);
@@ -21,6 +22,10 @@ public class BotException extends Exception {
 
     public String getPublicErrorMessage() {
         return "Une erreur est survenue, veuillez réessayer plus tard ou contacter un staff.";
+    }
+
+    public void printErrorMessage() {
+        System.err.println(ConsoleColors.RED + "[BotException] -> " + this.getMessage() + ConsoleColors.RESET);
     }
 
     @Override

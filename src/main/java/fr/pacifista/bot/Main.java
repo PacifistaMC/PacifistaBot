@@ -2,6 +2,7 @@ package fr.pacifista.bot;
 
 import fr.pacifista.bot.modules.ScheduledTasks;
 import fr.pacifista.bot.modules.ConsoleCommands;
+import fr.pacifista.bot.pacifista.SocketClientSpigot;
 import fr.pacifista.bot.utils.BotException;
 import fr.pacifista.bot.utils.ConsoleColors;
 
@@ -15,7 +16,9 @@ public class Main {
 
     Main() throws BotException {
         instance = this;
-        bot = new Bot();
+        this.bot = new Bot();
+        SocketClientSpigot.closeSocket();
+        SocketClientSpigot.initSocket(this.bot.botConfiguration.pacifistaAddress, this.bot.botConfiguration.pacifistaPort);
         ConsoleCommands.setupConsole();
         ScheduledTasks.init();
     }
@@ -23,11 +26,14 @@ public class Main {
     public void reload() throws BotException {
         System.out.println(ConsoleColors.YELLOW + "Rechargement du bot..." + ConsoleColors.RESET);
         bot = new Bot();
+        SocketClientSpigot.closeSocket();
+        SocketClientSpigot.initSocket(this.bot.botConfiguration.pacifistaAddress, this.bot.botConfiguration.pacifistaPort);
         System.out.println(ConsoleColors.GREEN + "Rechargement terminé !" + ConsoleColors.RESET);
     }
 
     public void stop() {
         System.out.println("Arrêt du bot");
+        SocketClientSpigot.closeSocket();
         System.exit(0);
     }
 
