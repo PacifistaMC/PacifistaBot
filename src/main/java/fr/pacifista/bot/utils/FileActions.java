@@ -1,4 +1,4 @@
-package fr.pacifista.bot.Utils;
+package fr.pacifista.bot.utils;
 
 import java.io.File;
 import java.io.FileInputStream;

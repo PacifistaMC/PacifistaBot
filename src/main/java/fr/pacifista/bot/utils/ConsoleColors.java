@@ -1,4 +1,4 @@
-package fr.pacifista.bot.Utils;
+package fr.pacifista.bot.utils;
 
 public class ConsoleColors {
     // Reset

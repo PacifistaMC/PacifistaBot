@@ -1,6 +1,6 @@
-package fr.pacifista.bot.Events;
+package fr.pacifista.bot.events;
 
-import fr.pacifista.bot.Modules.Log;
+import fr.pacifista.bot.modules.Log;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;

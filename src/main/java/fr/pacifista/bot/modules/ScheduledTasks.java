@@ -1,4 +1,4 @@
-package fr.pacifista.bot.Modules;
+package fr.pacifista.bot.modules;
 
 import fr.pacifista.bot.Main;
 
@@ -37,6 +37,6 @@ class RefreshBotActivity extends Task {
 
     @Override
     void task() {
-        Main.instance.getBot().refreshActivityMsg();
+        //Main.instance.getBot().refreshActivityMsg();
     }
 }

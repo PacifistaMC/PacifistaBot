@@ -1,6 +1,6 @@
-package fr.pacifista.bot.Modules;
+package fr.pacifista.bot.modules;
 
-import fr.pacifista.bot.Utils.FileActions;
+import fr.pacifista.bot.utils.FileActions;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 
@@ -19,7 +19,7 @@ public class Log {
             DateFormat dateFormat = new SimpleDateFormat("d-MM-yyyy");
             DateFormat timeFormat = new SimpleDateFormat("HH:mm");
             Date date = new Date();
-            String dateFormated = dateFormat.format(date);
+            String dateFormatted = dateFormat.format(date);
             String time = timeFormat.format(date);
 
             if (!logFolder.exists() && !logFolder.mkdirs()) {
@@ -28,7 +28,7 @@ public class Log {
             }
 
             try {
-                File logFile = new File(logFolder, dateFormated + ".log");
+                File logFile = new File(logFolder, dateFormatted + ".log");
                 if (!logFile.exists() && !logFile.createNewFile())
                     throw new IOException("Could not create file");
                 String log = time + " > " + user.getAsTag() + " [" + textChannel.getName() + "] " + message + "\n";
