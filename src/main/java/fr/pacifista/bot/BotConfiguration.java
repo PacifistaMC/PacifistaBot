@@ -34,6 +34,10 @@ public class BotConfiguration {
             this.discordToken = scanner.nextLine();;
         }
         if (this.pacifistaGuildID == null) {
+            System.out.print(ConsoleColors.GREEN + "Guild id de Pacifista: " + ConsoleColors.RESET);
+            this.pacifistaGuildID = scanner.nextLine();
+        }
+        if (this.bienvenueID == null) {
             System.out.print(ConsoleColors.GREEN + "Channel id de bienvenue: " + ConsoleColors.RESET);
             this.bienvenueID = scanner.nextLine();
         }
