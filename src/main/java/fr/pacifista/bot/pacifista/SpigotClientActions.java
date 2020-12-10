@@ -81,7 +81,7 @@ public class SpigotClientActions {
         userJson.addProperty("id", user.getId());
         userJson.addProperty("name", user.getNickname() == null ? user.getUser().getName() : user.getNickname());
         userJson.addProperty("userTag", user.getUser().getAsTag());
-        toSend.addProperty("message", message.getContentRaw());
+        toSend.addProperty("message", message.getContentDisplay());
         toSend.add("user", userJson);
 
         try {
