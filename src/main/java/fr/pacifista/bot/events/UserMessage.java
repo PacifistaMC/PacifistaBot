@@ -4,6 +4,7 @@ import fr.pacifista.bot.Bot;
 import fr.pacifista.bot.modules.Log;
 import fr.pacifista.bot.pacifista.SpigotClientActions;
 import fr.pacifista.bot.utils.BotException;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
@@ -22,12 +23,13 @@ public class UserMessage extends ListenerAdapter {
     public void onGuildMessageReceived(GuildMessageReceivedEvent e) {
         if (e.getAuthor().isBot()) return;
         User user = e.getAuthor();
+        Member member = e.getMember();
         TextChannel channel = e.getChannel();
         Message message = e.getMessage();
 
         try {
             if (channel.getId().equals(Bot.getConfiguration().pacifistaChatID)) {
-                SpigotClientActions.sendDiscordMessageToPacifista(user, message, channel);
+                SpigotClientActions.sendDiscordMessageToPacifista(member, message, channel);
                 return;
             }
         } catch (BotException botException) {
