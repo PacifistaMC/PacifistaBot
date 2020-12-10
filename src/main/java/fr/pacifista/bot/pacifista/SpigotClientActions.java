@@ -10,7 +10,6 @@ import fr.pacifista.bot.utils.Utils;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
 
 import java.util.UUID;
 
@@ -37,13 +36,6 @@ public class SpigotClientActions {
                         str.append(message.charAt(i));
                     }
                     Bot.sendMessageToChannel("**__" + playerName + "__**" + " » " + str.toString() + "", Bot.getConfiguration().pacifistaChatID);
-                    break;
-                case Events.PLAYER_JOIN_LEAVE_EVENT:
-                    final boolean isConnecting = res.get("isConnecting").getAsBoolean();
-                    final UUID playerUUID = UUID.fromString(res.get("uuid").getAsString());
-                    final String username = res.get("name").getAsString();
-
-                    Bot.sendMessageToChannel("> **" + username + "** " + (isConnecting ? "s'est connecté sur Pacifista" : "s'est déconnecté de Pacifista"), Bot.getConfiguration().pacifistaChatID);
                     break;
             }
         } catch (IllegalStateException | JsonSyntaxException | NullPointerException ignored) {
