@@ -58,7 +58,7 @@ public class SocketClientSpigot {
                         }
                     }
                 } catch (IOException | BotException e) {
-                    e.printStackTrace();
+                    System.err.println(ConsoleColors.RED + "[BotException] - " + e.getMessage() + ConsoleColors.WHITE);
                 } finally {
                     try {
                         if (reader != null)

@@ -10,6 +10,9 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
+import java.time.OffsetDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 public class Bot {
 
@@ -92,5 +95,31 @@ public class Bot {
         Bot bot = getInstance();
 
         return bot.api.getTextChannelById(channelID);
+    }
+
+    public static void clearChannel(final String channelID) {
+        new Thread(() -> {
+            try {
+                OffsetDateTime twoWeeksAgo = OffsetDateTime.now().minus(2, ChronoUnit.WEEKS);
+                Bot bot = getInstance();
+
+                TextChannel channel = bot.api.getTextChannelById(channelID);
+
+                if (channel == null)
+                    return;
+
+                List<Message> messages = channel.getHistory().retrievePast(100).complete();
+                messages.removeIf(m -> m.getTimeCreated().isBefore(twoWeeksAgo));
+                while (!messages.isEmpty()) {
+                    messages.removeIf(m -> m.getTimeCreated().isBefore(twoWeeksAgo));
+                    if (messages.isEmpty())
+                        break;
+                    channel.deleteMessages(messages).complete();
+                    messages = channel.getHistory().retrievePast(100).complete();
+                }
+            } catch (BotException e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 }

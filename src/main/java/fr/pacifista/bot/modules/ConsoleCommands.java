@@ -59,6 +59,7 @@ public class ConsoleCommands {
 
     public static void getLogs(List<String> args) {
         try {
+            Bot.clearChannel(Bot.getConfiguration().pacifistaChatID);
             String dateFormated;
             if (args.size() < 1) {
                 DateFormat dateFormat = new SimpleDateFormat("d-MM-yyyy");

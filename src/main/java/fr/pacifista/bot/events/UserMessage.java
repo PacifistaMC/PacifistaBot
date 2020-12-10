@@ -28,7 +28,7 @@ public class UserMessage extends ListenerAdapter {
         Message message = e.getMessage();
 
         try {
-            if (channel.getId().equals(Bot.getConfiguration().pacifistaChatID)) {
+            if (channel.getId().equals(Bot.getConfiguration().pacifistaChatID) && member != null) {
                 SpigotClientActions.sendDiscordMessageToPacifista(member, message, channel);
                 return;
             }

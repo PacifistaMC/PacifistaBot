@@ -22,7 +22,7 @@ public class BotException extends Exception {
     }
 
     public String getPublicErrorMessage() {
-        return "Une erreur est survenue, veuillez réessayer plus tard ou contacter un staff.";
+        return ":warning: ``Une erreur est survenue, veuillez réessayer plus tard ou contacter un staff.``";
     }
 
     public void printErrorMessage() {
@@ -31,39 +31,41 @@ public class BotException extends Exception {
 
     @Override
     public void printStackTrace() {
-        try {
-            final DateFormat dateFormat = new SimpleDateFormat("d-MM-yyyy");
-            final Date date = new Date();
-            final String dateFormatted = dateFormat.format(date);
-            final File folderErrorLog = new File(Main.dataFolder, "errorLogs");
-            final File logFile = new File(folderErrorLog, dateFormatted + ".log");
-
-            if (!folderErrorLog.exists() && !folderErrorLog.mkdir())
-                throw new IOException("Could not create folder " + folderErrorLog.getName());
-            if (!logFile.exists() && !logFile.createNewFile())
-                throw new IOException("Could not create file " + logFile.getName());
-
+        new Thread(() -> {
             try {
-                final EmbedBuilder embedBuilder = new EmbedBuilder();
-                embedBuilder.setColor(Color.RED);
-                embedBuilder.setTitle("Erreur du bot");
-                embedBuilder.setFooter("PacifistaBot - Erreur report");
-                embedBuilder.addField("Fichier de log erreur", logFile.getName(), true);
-                embedBuilder.addField("Message d'erreur", this.getMessage(), true);
-                embedBuilder.addField("Stack principale", this.getStackTrace()[0].toString(), false);
-                Bot.sendMessageToChannel(embedBuilder.build(), Bot.getConfiguration().logID);
-            } catch (BotException e) {
-                System.err.println(ConsoleColors.RED + "Impossible d'envoyer le embed d'erreur dans log." + ConsoleColors.RESET);
-            }
+                final DateFormat dateFormat = new SimpleDateFormat("d-MM-yyyy");
+                final Date date = new Date();
+                final String dateFormatted = dateFormat.format(date);
+                final File folderErrorLog = new File(Main.dataFolder, "errorLogs");
+                final File logFile = new File(folderErrorLog, dateFormatted + ".log");
 
-            for (StackTraceElement trace : this.getStackTrace()) {
-                FileActions.writeInFile(logFile, trace.toString() + "\n", true);
+                if (!folderErrorLog.exists() && !folderErrorLog.mkdir())
+                    throw new IOException("Could not create folder " + folderErrorLog.getName());
+                if (!logFile.exists() && !logFile.createNewFile())
+                    throw new IOException("Could not create file " + logFile.getName());
+
+                try {
+                    final EmbedBuilder embedBuilder = new EmbedBuilder();
+                    embedBuilder.setColor(Color.RED);
+                    embedBuilder.setTitle("Erreur du bot");
+                    embedBuilder.setFooter("PacifistaBot - Erreur report");
+                    embedBuilder.addField("Fichier de log erreur", logFile.getName(), true);
+                    embedBuilder.addField("Message d'erreur", this.getMessage(), true);
+                    embedBuilder.addField("Stack principale", this.getStackTrace()[0].toString(), false);
+                    Bot.sendMessageToChannel(embedBuilder.build(), Bot.getConfiguration().logID);
+                } catch (BotException e) {
+                    System.err.println(ConsoleColors.RED + "Impossible d'envoyer le embed d'erreur dans log." + ConsoleColors.RESET);
+                }
+
+                for (StackTraceElement trace : this.getStackTrace()) {
+                    FileActions.writeInFile(logFile, trace.toString() + "\n", true);
+                }
+                FileActions.writeInFile(logFile, "\n", true);
+                System.err.println(ConsoleColors.RED + "[BotException] -> " + this.getMessage() + " (errorLogs/" + logFile.getName() + ")" + ConsoleColors.RESET);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            FileActions.writeInFile(logFile, "\n", true);
-            System.err.println(ConsoleColors.RED + "[BotException] -> " + this.getMessage() + " (errorLogs/" + logFile.getName() + ")" + ConsoleColors.RESET);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        }).start();
     }
 
 }

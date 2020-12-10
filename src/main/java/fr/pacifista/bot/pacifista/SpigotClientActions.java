@@ -5,6 +5,8 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import fr.pacifista.bot.Bot;
 import fr.pacifista.bot.utils.BotException;
+import fr.pacifista.bot.utils.ConsoleColors;
+import fr.pacifista.bot.utils.Utils;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -28,7 +30,13 @@ public class SpigotClientActions {
                     final String playerName = res.get("name").getAsString();
                     final String message = res.get("message").getAsString();
 
-                    Bot.sendMessageToChannel("**" + playerName + "**" + " » " + message + "", Bot.getConfiguration().pacifistaChatID);
+                    final StringBuilder str = new StringBuilder();
+                    for (int i = 0; i < message.length(); ++i) {
+                        if (message.charAt(i) == '§' || (i > 0 && message.charAt(i - 1) == '§'))
+                            continue;
+                        str.append(message.charAt(i));
+                    }
+                    Bot.sendMessageToChannel("**__" + playerName + "__**" + " » " + str.toString() + "", Bot.getConfiguration().pacifistaChatID);
                     break;
                 case Events.PLAYER_JOIN_LEAVE_EVENT:
                     final boolean isConnecting = res.get("isConnecting").getAsBoolean();
@@ -60,6 +68,12 @@ public class SpigotClientActions {
     }
 
     public static void sendDiscordMessageToPacifista(final Member user, final Message message, final TextChannel channel) {
+        if (message.getAttachments().size() > 0 || Utils.isStringContainUrl(message.getContentRaw())) {
+            channel.sendMessage(":warning: ``Pas d'image, d'url ou de vidéos dans ce canal``").queue();
+            message.delete().queue();
+            return;
+        }
+
         final JsonObject toSend = new JsonObject();
         final JsonObject userJson = new JsonObject();
 
@@ -74,7 +88,7 @@ public class SpigotClientActions {
             SocketClientSpigot.sendMessageToServer(toSend.toString());
         } catch (BotException e) {
             channel.sendMessage(e.getPublicErrorMessage()).queue();
-            e.printStackTrace();
+            System.err.println(ConsoleColors.RED + "[BotException] - " + e.getMessage() + ConsoleColors.WHITE);
         }
     }
 
