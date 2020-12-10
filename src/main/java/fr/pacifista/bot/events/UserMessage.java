@@ -1,9 +1,14 @@
 package fr.pacifista.bot.events;
 
 import fr.pacifista.bot.Bot;
+import fr.pacifista.bot.commands.BotCommand;
+import fr.pacifista.bot.commands.IpCommand;
+import fr.pacifista.bot.commands.LogsCommand;
 import fr.pacifista.bot.modules.Log;
 import fr.pacifista.bot.pacifista.SpigotClientActions;
 import fr.pacifista.bot.utils.BotException;
+import fr.pacifista.bot.utils.Utils;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -11,14 +16,19 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class UserMessage extends ListenerAdapter {
+
+    private final List<BotCommand> commands = Arrays.asList(
+            new IpCommand(),
+            new LogsCommand()
+    );
 
     public void onGuildMessageReceived(GuildMessageReceivedEvent e) {
         if (e.getAuthor().isBot()) return;
@@ -48,18 +58,24 @@ public class UserMessage extends ListenerAdapter {
         if (!command.startsWith("!")) return;
         command = command.substring(1);
 
-        try {
-            Method[] commandList = Commands.class.getDeclaredMethods();
-            for (Method method : commandList) {
-                String methodName = method.getName();
-                if (methodName.equalsIgnoreCase(command)) {
-                    method.invoke(Commands.class, user, channel, args);
-                    return;
-                }
+        if (command.equalsIgnoreCase("help")) {
+            EmbedBuilder embedBuilder = new EmbedBuilder();
+            embedBuilder.setDescription("PacifistaBot");
+            embedBuilder.setColor(Utils.MAIN_COLOR);
+            for (BotCommand botCommand : commands) {
+                if (botCommand.isPublic())
+                    embedBuilder.addField("!" + botCommand.getCommandName(), botCommand.getHelp(), true);
             }
-            channel.sendMessage(":warning: La commande ``" + command + "`` n'existe pas.\n``!help pour obtenir la liste des commandes``").queue();
-        } catch (InvocationTargetException | IllegalAccessException noSuchMethodException) {
-            noSuchMethodException.printStackTrace();
+            channel.sendMessage(embedBuilder.build()).queue();
+            return;
         }
+
+        for (BotCommand botCommand : commands) {
+            if (command.equalsIgnoreCase(botCommand.getCommandName())) {
+                botCommand.execute(user, channel, args);
+                return;
+            }
+        }
+        channel.sendMessage(":warning: La commande ``" + command + "`` n'existe pas.\n``!help pour obtenir la liste des commandes``").queue();
     }
 }
