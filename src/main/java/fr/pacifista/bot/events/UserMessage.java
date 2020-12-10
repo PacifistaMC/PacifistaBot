@@ -1,6 +1,9 @@
 package fr.pacifista.bot.events;
 
+import fr.pacifista.bot.Bot;
 import fr.pacifista.bot.modules.Log;
+import fr.pacifista.bot.pacifista.SpigotClientActions;
+import fr.pacifista.bot.utils.BotException;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
@@ -21,6 +24,15 @@ public class UserMessage extends ListenerAdapter {
         User user = e.getAuthor();
         TextChannel channel = e.getChannel();
         Message message = e.getMessage();
+
+        try {
+            if (channel.getId().equals(Bot.getConfiguration().pacifistaChatID)) {
+                SpigotClientActions.sendDiscordMessageToPacifista(user, message, channel);
+                return;
+            }
+        } catch (BotException botException) {
+            botException.printStackTrace();
+        }
 
         Log.logMessage(user, channel, message.getContentRaw());
 

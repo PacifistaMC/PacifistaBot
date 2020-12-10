@@ -5,6 +5,9 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import fr.pacifista.bot.Bot;
 import fr.pacifista.bot.utils.BotException;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.User;
 
 import java.util.UUID;
 
@@ -53,6 +56,25 @@ public class SpigotClientActions {
             final String serverName = playerData.get("server").getAsString();
             final int playerPing = playerData.get("ping").getAsInt();
         }*/
+    }
+
+    public static void sendDiscordMessageToPacifista(final User user, final Message message, final TextChannel channel) {
+        final JsonObject toSend = new JsonObject();
+        final JsonObject userJson = new JsonObject();
+
+        toSend.addProperty("code", DISCORD_CHAT_TO_PACIFISTA);
+        userJson.addProperty("id", user.getId());
+        userJson.addProperty("name", user.getName());
+        userJson.addProperty("userTag", user.getAsTag());
+        toSend.addProperty("message", message.getContentRaw());
+        toSend.add("user", userJson);
+
+        try {
+            SocketClientSpigot.sendMessageToServer(toSend.toString());
+        } catch (BotException e) {
+            channel.sendMessage(e.getPublicErrorMessage()).queue();
+            e.printStackTrace();
+        }
     }
 
 }
