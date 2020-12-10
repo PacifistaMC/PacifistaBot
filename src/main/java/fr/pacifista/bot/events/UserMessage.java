@@ -60,7 +60,7 @@ public class UserMessage extends ListenerAdapter {
 
         if (command.equalsIgnoreCase("help")) {
             EmbedBuilder embedBuilder = new EmbedBuilder();
-            embedBuilder.setDescription("PacifistaBot");
+            embedBuilder.setDescription("Voici les commandes du bot !");
             embedBuilder.setColor(Utils.MAIN_COLOR);
             for (BotCommand botCommand : commands) {
                 if (botCommand.isPublic())
