@@ -9,9 +9,7 @@ import fr.pacifista.bot.utils.ConsoleColors;
 import fr.pacifista.bot.utils.Utils;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.TextChannel;
-
-import java.util.UUID;
+import net.dv8tion.jda.api.entities.MessageChannel;
 
 import static fr.pacifista.bot.pacifista.SocketDiscordClientCode.*;
 
@@ -59,7 +57,7 @@ public class SpigotClientActions {
         }*/
     }
 
-    public static void sendDiscordMessageToPacifista(final Member user, final Message message, final TextChannel channel) {
+    public static void sendDiscordMessageToPacifista(final Member user, final Message message, final MessageChannel channel) {
         if (message.getAttachments().size() > 0 || Utils.isStringContainUrl(message.getContentRaw())) {
             channel.sendMessage(":warning: ``Pas d'image, d'url ou de vidéos dans ce canal``").queue();
             message.delete().queue();

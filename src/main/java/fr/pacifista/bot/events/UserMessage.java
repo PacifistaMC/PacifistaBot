@@ -1,20 +1,14 @@
 package fr.pacifista.bot.events;
 
 import fr.pacifista.bot.Bot;
-import fr.pacifista.bot.commands.BotCommand;
-import fr.pacifista.bot.commands.ClearChat;
-import fr.pacifista.bot.commands.IpCommand;
-import fr.pacifista.bot.commands.LogsCommand;
+import fr.pacifista.bot.commands.*;
 import fr.pacifista.bot.modules.Log;
 import fr.pacifista.bot.pacifista.SpigotClientActions;
 import fr.pacifista.bot.utils.BotException;
 import fr.pacifista.bot.utils.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import java.util.ArrayList;
@@ -28,14 +22,15 @@ public class UserMessage extends ListenerAdapter {
     private final List<BotCommand> commands = Arrays.asList(
             new IpCommand(),
             new LogsCommand(),
-            new ClearChat()
+            new ClearChat(),
+            new LinkMinecraftDiscord()
     );
 
-    public void onGuildMessageReceived(GuildMessageReceivedEvent e) {
+    public void onMessageReceived(MessageReceivedEvent e) {
         if (e.getAuthor().isBot()) return;
         User user = e.getAuthor();
         Member member = e.getMember();
-        TextChannel channel = e.getChannel();
+        MessageChannel channel = e.getChannel();
         Message message = e.getMessage();
 
         try {
@@ -73,8 +68,9 @@ public class UserMessage extends ListenerAdapter {
 
         for (BotCommand botCommand : commands) {
             if (command.equalsIgnoreCase(botCommand.getCommandName())) {
+                if (!channel.getType().isGuild() && !botCommand.canExecuteInPrivateDM()) return;
                 if (botCommand.hasPermission(member))
-                    botCommand.execute(member, channel, args);
+                    botCommand.execute(member, channel, args, message);
                 else
                     channel.sendMessage(":warning: Vous n'avez pas la permission d'executer cette commande.").queue();
                 return;

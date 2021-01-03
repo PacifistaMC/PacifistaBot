@@ -1,7 +1,8 @@
 package fr.pacifista.bot.commands;
 
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageChannel;
 
 import java.util.List;
 
@@ -17,12 +18,14 @@ public abstract class BotCommand {
         return commandName;
     }
 
-    public abstract void execute(final Member user, final TextChannel channel, final List<String> args);
+    public abstract void execute(final Member user, final MessageChannel channel, final List<String> args, final Message messageReceived);
 
     public abstract String getHelp();
 
     public abstract boolean isPublic();
 
     public abstract boolean hasPermission(final Member member);
+
+    public abstract boolean canExecuteInPrivateDM();
 
 }
