@@ -2,10 +2,9 @@ package fr.pacifista.bot.commands;
 
 import fr.pacifista.bot.utils.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
 
-import java.awt.*;
 import java.util.List;
 
 public class IpCommand extends BotCommand {
@@ -15,7 +14,7 @@ public class IpCommand extends BotCommand {
     }
 
     @Override
-    public void execute(User user, TextChannel channel, List<String> args) {
+    public void execute(Member user, TextChannel channel, List<String> args) {
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle("Pacifista Minecraft", "https://pacifista.fr");
         embedBuilder.setDescription("Serveur minecraft survie");
@@ -34,6 +33,11 @@ public class IpCommand extends BotCommand {
 
     @Override
     public boolean isPublic() {
+        return true;
+    }
+
+    @Override
+    public boolean hasPermission(Member member) {
         return true;
     }
 }

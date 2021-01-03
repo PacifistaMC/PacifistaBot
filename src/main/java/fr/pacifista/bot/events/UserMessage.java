@@ -2,6 +2,7 @@ package fr.pacifista.bot.events;
 
 import fr.pacifista.bot.Bot;
 import fr.pacifista.bot.commands.BotCommand;
+import fr.pacifista.bot.commands.ClearChat;
 import fr.pacifista.bot.commands.IpCommand;
 import fr.pacifista.bot.commands.LogsCommand;
 import fr.pacifista.bot.modules.Log;
@@ -16,7 +17,6 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,7 +27,8 @@ public class UserMessage extends ListenerAdapter {
 
     private final List<BotCommand> commands = Arrays.asList(
             new IpCommand(),
-            new LogsCommand()
+            new LogsCommand(),
+            new ClearChat()
     );
 
     public void onGuildMessageReceived(GuildMessageReceivedEvent e) {
@@ -63,7 +64,7 @@ public class UserMessage extends ListenerAdapter {
             embedBuilder.setDescription("Voici les commandes du bot !");
             embedBuilder.setColor(Utils.MAIN_COLOR);
             for (BotCommand botCommand : commands) {
-                if (botCommand.isPublic())
+                if (botCommand.isPublic() && botCommand.hasPermission(member))
                     embedBuilder.addField("!" + botCommand.getCommandName(), botCommand.getHelp(), true);
             }
             channel.sendMessage(embedBuilder.build()).queue();
@@ -72,7 +73,10 @@ public class UserMessage extends ListenerAdapter {
 
         for (BotCommand botCommand : commands) {
             if (command.equalsIgnoreCase(botCommand.getCommandName())) {
-                botCommand.execute(user, channel, args);
+                if (botCommand.hasPermission(member))
+                    botCommand.execute(member, channel, args);
+                else
+                    channel.sendMessage(":warning: Vous n'avez pas la permission d'executer cette commande.").queue();
                 return;
             }
         }
