@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.User;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ public class IpCommand extends BotCommand {
     }
 
     @Override
-    public void execute(Member user, MessageChannel channel, List<String> args, final Message messageReceived) {
+    public void execute(User user, MessageChannel channel, List<String> args, final Message messageReceived) {
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle("Pacifista Minecraft", "https://pacifista.fr");
         embedBuilder.setDescription("Serveur minecraft survie");

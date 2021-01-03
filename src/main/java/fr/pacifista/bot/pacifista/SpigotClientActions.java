@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import fr.pacifista.bot.Bot;
+import fr.pacifista.bot.BotConfiguration;
 import fr.pacifista.bot.utils.BotException;
 import fr.pacifista.bot.utils.ConsoleColors;
 import fr.pacifista.bot.utils.Utils;
@@ -17,6 +18,7 @@ public class SpigotClientActions {
 
     protected static void onReceivedMessage(final String response) {
         try {
+            final BotConfiguration botConfiguration = Bot.getConfiguration();
             JsonObject res = JsonParser.parseString(response).getAsJsonObject();
 
             switch (res.get("type").getAsString()) {
@@ -33,7 +35,42 @@ public class SpigotClientActions {
                             continue;
                         str.append(message.charAt(i));
                     }
-                    Bot.sendMessageToChannel("**__" + playerName + "__**" + " » " + str.toString() + "", Bot.getConfiguration().pacifistaChatID);
+                    Bot.sendMessageToChannel("**__" + playerName + "__**" + " » " + str.toString() + "", Bot.getConfiguration().pacifistaChannelID);
+                    break;
+                case SEND_MESSAGE_TO_DISCORD_USER:
+                    final String userID = res.get("userID").getAsString();
+                    final String messageToUser = res.get("message").getAsString();
+
+                    Bot.sendPrivateMessage(userID, messageToUser);
+                    break;
+                case SET_PACIFISTA_GRADE_TO_DISCORD:
+                    final String userIDDiscord = res.get("userDiscordID").getAsString();
+                    final String rankName = res.get("rankName").getAsString();
+
+                    Bot.updateRole(botConfiguration.donateurRoleID, userIDDiscord, false);
+                    Bot.updateRole(botConfiguration.aventurierRoleID, userIDDiscord, false);
+                    Bot.updateRole(botConfiguration.paladinRoleID, userIDDiscord, false);
+                    Bot.updateRole(botConfiguration.eliteRoleID, userIDDiscord, false);
+                    Bot.updateRole(botConfiguration.legendaireRoleID, userIDDiscord, false);
+                    if (rankName.equalsIgnoreCase("Donateur"))
+                        Bot.updateRole(botConfiguration.donateurRoleID, userIDDiscord, true);
+                    else if (rankName.equalsIgnoreCase("Aventurier"))
+                        Bot.updateRole(botConfiguration.aventurierRoleID, userIDDiscord, true);
+                    else if (rankName.equalsIgnoreCase("Paladin"))
+                        Bot.updateRole(botConfiguration.paladinRoleID, userIDDiscord, true);
+                    else if (rankName.equalsIgnoreCase("Elite"))
+                        Bot.updateRole(botConfiguration.eliteRoleID, userIDDiscord, true);
+                    else if (rankName.equalsIgnoreCase("Legendaire") || rankName.equalsIgnoreCase("Ami"))
+                        Bot.updateRole(botConfiguration.legendaireRoleID, userIDDiscord, true);
+                    break;
+                case UNLINK_MINECRAFT_AND_DISCORD:
+                    final String userDiscordID = res.get("userDiscordID").getAsString();
+
+                    Bot.updateRole(botConfiguration.donateurRoleID, userDiscordID, false);
+                    Bot.updateRole(botConfiguration.aventurierRoleID, userDiscordID, false);
+                    Bot.updateRole(botConfiguration.paladinRoleID, userDiscordID, false);
+                    Bot.updateRole(botConfiguration.eliteRoleID, userDiscordID, false);
+                    Bot.updateRole(botConfiguration.legendaireRoleID, userDiscordID, false);
                     break;
             }
         } catch (IllegalStateException | JsonSyntaxException | NullPointerException ignored) {

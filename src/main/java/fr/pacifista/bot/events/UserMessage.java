@@ -34,7 +34,7 @@ public class UserMessage extends ListenerAdapter {
         Message message = e.getMessage();
 
         try {
-            if (channel.getId().equals(Bot.getConfiguration().pacifistaChatID) && member != null) {
+            if (channel.getId().equals(Bot.getConfiguration().pacifistaChannelID) && member != null) {
                 SpigotClientActions.sendDiscordMessageToPacifista(member, message, channel);
                 return;
             }
@@ -70,7 +70,7 @@ public class UserMessage extends ListenerAdapter {
             if (command.equalsIgnoreCase(botCommand.getCommandName())) {
                 if (!channel.getType().isGuild() && !botCommand.canExecuteInPrivateDM()) return;
                 if (botCommand.hasPermission(member))
-                    botCommand.execute(member, channel, args, message);
+                    botCommand.execute(user, channel, args, message);
                 else
                     channel.sendMessage(":warning: Vous n'avez pas la permission d'executer cette commande.").queue();
                 return;

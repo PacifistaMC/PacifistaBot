@@ -16,11 +16,16 @@ public class BotConfiguration {
     private static final File configFile = new File(dataFolder, "botConfiguration.json");
 
     public String discordToken;
-    public String bienvenueID;
-    public String logID;
-    public String playerID;
-    public String adminID;
-    public String pacifistaChatID;
+    public String bienvenueChannelID;
+    public String logChannelID;
+    public String playerRoleID;
+    public String donateurRoleID;
+    public String aventurierRoleID;
+    public String paladinRoleID;
+    public String eliteRoleID;
+    public String legendaireRoleID;
+    public String adminRoleID;
+    public String pacifistaChannelID;
     public String pacifistaGuildID;
 
     public String pacifistaAddress;
@@ -37,25 +42,45 @@ public class BotConfiguration {
             System.out.print(ConsoleColors.GREEN + "Guild id de Pacifista:" + System.lineSeparator() + ConsoleColors.RESET);
             this.pacifistaGuildID = scanner.nextLine();
         }
-        if (this.bienvenueID == null) {
+        if (this.bienvenueChannelID == null) {
             System.out.print(ConsoleColors.GREEN + "Channel id de bienvenue:" + System.lineSeparator() + ConsoleColors.RESET);
-            this.bienvenueID = scanner.nextLine();
+            this.bienvenueChannelID = scanner.nextLine();
         }
-        if (this.logID == null) {
+        if (this.logChannelID == null) {
             System.out.print(ConsoleColors.GREEN + "Channel id de log:" + System.lineSeparator() + ConsoleColors.RESET);
-            this.logID = scanner.nextLine();
+            this.logChannelID = scanner.nextLine();
         }
-        if (this.pacifistaChatID == null) {
+        if (this.pacifistaChannelID == null) {
             System.out.print(ConsoleColors.GREEN + "Channel id du chat pacifista:" + System.lineSeparator() + ConsoleColors.RESET);
-            this.pacifistaChatID = scanner.nextLine();
+            this.pacifistaChannelID = scanner.nextLine();
         }
-        if (this.playerID == null) {
+        if (this.playerRoleID == null) {
             System.out.print(ConsoleColors.GREEN + "Group id du grade joueur:" + System.lineSeparator() + ConsoleColors.RESET);
-            this.playerID = scanner.nextLine();
+            this.playerRoleID = scanner.nextLine();
         }
-        if (this.adminID == null) {
+        if (this.donateurRoleID == null) {
+            System.out.print(ConsoleColors.GREEN + "Group id du grade donateur:" + System.lineSeparator() + ConsoleColors.RESET);
+            this.donateurRoleID = scanner.nextLine();
+        }
+        if (this.aventurierRoleID == null) {
+            System.out.print(ConsoleColors.GREEN + "Group id du grade aventurier:" + System.lineSeparator() + ConsoleColors.RESET);
+            this.aventurierRoleID = scanner.nextLine();
+        }
+        if (this.paladinRoleID == null) {
+            System.out.print(ConsoleColors.GREEN + "Group id du grade paladin:" + System.lineSeparator() + ConsoleColors.RESET);
+            this.paladinRoleID = scanner.nextLine();
+        }
+        if (this.eliteRoleID == null) {
+            System.out.print(ConsoleColors.GREEN + "Group id du grade elite:" + System.lineSeparator() + ConsoleColors.RESET);
+            this.eliteRoleID = scanner.nextLine();
+        }
+        if (this.legendaireRoleID == null) {
+            System.out.print(ConsoleColors.GREEN + "Group id du grade legendaire:" + System.lineSeparator() + ConsoleColors.RESET);
+            this.legendaireRoleID = scanner.nextLine();
+        }
+        if (this.adminRoleID == null) {
             System.out.print(ConsoleColors.GREEN + "Group id du grade admin:" + System.lineSeparator() + ConsoleColors.RESET);
-            this.adminID = scanner.nextLine();
+            this.adminRoleID = scanner.nextLine();
         }
         if (this.pacifistaAddress == null) {
             System.out.print(ConsoleColors.GREEN + "Adresse du socket du serveur minecraft:" + System.lineSeparator() + ConsoleColors.RESET);

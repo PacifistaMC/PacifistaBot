@@ -18,7 +18,7 @@ public class Log {
 
     public static void logMessage(User user, MessageChannel textChannel, String message) {
         try {
-            if (textChannel.getId().equals(Bot.getConfiguration().pacifistaChatID))
+            if (textChannel.getId().equals(Bot.getConfiguration().pacifistaChannelID))
                 return;
         } catch (BotException e) {
             e.printStackTrace();

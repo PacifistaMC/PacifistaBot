@@ -59,7 +59,7 @@ public class ConsoleCommands {
 
     public static void getLogs(List<String> args) {
         try {
-            Bot.clearChannel(Bot.getConfiguration().pacifistaChatID);
+            Bot.clearChannel(Bot.getConfiguration().pacifistaChannelID);
             String dateFormated;
             if (args.size() < 1) {
                 DateFormat dateFormat = new SimpleDateFormat("d-MM-yyyy");
@@ -69,7 +69,7 @@ public class ConsoleCommands {
                 dateFormated = args.get(0);
             System.out.println("Envoi des logs : " + dateFormated + ".log");
 
-            TextChannel logChannel = Bot.getChannelByID(Bot.getConfiguration().logID);
+            TextChannel logChannel = Bot.getChannelByID(Bot.getConfiguration().logChannelID);
             if (logChannel == null)
                 return;
             File logFile = new File(Main.dataFolder, "logs/" + dateFormated + ".log");

@@ -3,6 +3,7 @@ package fr.pacifista.bot.commands;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.User;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ public abstract class BotCommand {
         return commandName;
     }
 
-    public abstract void execute(final Member user, final MessageChannel channel, final List<String> args, final Message messageReceived);
+    public abstract void execute(final User user, final MessageChannel channel, final List<String> args, final Message messageReceived);
 
     public abstract String getHelp();
 

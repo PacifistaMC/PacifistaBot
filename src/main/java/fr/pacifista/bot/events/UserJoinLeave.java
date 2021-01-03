@@ -47,7 +47,7 @@ public class UserJoinLeave extends ListenerAdapter {
             embedBuilder.setAuthor(userJoined.getAsTag(), null, userJoined.getAvatarUrl());
             embedBuilder.setThumbnail(userJoined.getAvatarUrl());
 
-            Bot.sendMessageToChannel(embedBuilder.build(), botConfiguration.bienvenueID);
+            Bot.sendMessageToChannel(embedBuilder.build(), botConfiguration.bienvenueChannelID);
 
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("d/MM/yyyy HH:mm");
             embedBuilder.addField("Date de création", dateTimeFormatter.format(creationDate), false);
@@ -58,17 +58,17 @@ public class UserJoinLeave extends ListenerAdapter {
                 embedBuilder.setColor(Color.orange);
                 if (diff <= 600) {
                     Bot.sendMessageToChannel(
-                            "<@&" + botConfiguration.adminID + "> :warning: Compte créé il y a moins de 10 minutes ! " + userJoined.getAsTag(),
-                            botConfiguration.logID
+                            "<@&" + botConfiguration.adminRoleID + "> :warning: Compte créé il y a moins de 10 minutes ! " + userJoined.getAsTag(),
+                            botConfiguration.logChannelID
                     );
                 }
             }
 
-            Role role = guild.getRoleById(botConfiguration.playerID);
+            Role role = guild.getRoleById(botConfiguration.playerRoleID);
             if (role != null)
                 guild.addRoleToMember(event.getMember(), role).queue();
 
-            Bot.sendMessageToChannel(embedBuilder.build(), botConfiguration.logID);
+            Bot.sendMessageToChannel(embedBuilder.build(), botConfiguration.logChannelID);
             System.out.println(userJoined.getAsTag() + " à rejoint le discord.");
         } catch (BotException e) {
             e.printStackTrace();
@@ -86,7 +86,7 @@ public class UserJoinLeave extends ListenerAdapter {
             embedBuilder.setAuthor(userLeave.getAsTag(), null, userLeave.getAvatarUrl());
             embedBuilder.setThumbnail(userLeave.getAvatarUrl());
 
-            Bot.sendMessageToChannel(embedBuilder.build(), botConfiguration.logID);
+            Bot.sendMessageToChannel(embedBuilder.build(), botConfiguration.logChannelID);
             System.out.println(userLeave.getAsTag() + " à quitté le discord.");
         } catch (BotException e) {
             e.printStackTrace();
@@ -104,7 +104,7 @@ public class UserJoinLeave extends ListenerAdapter {
             embedBuilder.setAuthor(bannedUser.getAsTag(), null, bannedUser.getAvatarUrl());
             embedBuilder.setThumbnail(bannedUser.getAvatarUrl());
 
-            Bot.sendMessageToChannel(embedBuilder.build(), botConfiguration.logID);
+            Bot.sendMessageToChannel(embedBuilder.build(), botConfiguration.logChannelID);
             System.out.println(bannedUser.getAsTag() + " est banni du discord.");
         } catch (BotException e) {
             e.printStackTrace();
@@ -122,7 +122,7 @@ public class UserJoinLeave extends ListenerAdapter {
             embedBuilder.setAuthor(unbannedUser.getAsTag(), null, unbannedUser.getAvatarUrl());
             embedBuilder.setThumbnail(unbannedUser.getAvatarUrl());
 
-            Bot.sendMessageToChannel(embedBuilder.build(), botConfiguration.logID);
+            Bot.sendMessageToChannel(embedBuilder.build(), botConfiguration.logChannelID);
             System.out.println(unbannedUser.getAsTag() + " n'est plus banni du discord.");
         } catch (BotException e) {
             e.printStackTrace();

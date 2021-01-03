@@ -97,6 +97,28 @@ public class Bot {
         return bot.api.getTextChannelById(channelID);
     }
 
+    public static void sendPrivateMessage(final String userID, final String message) throws BotException {
+        final Bot bot = getInstance();
+
+        bot.api.retrieveUserById(userID).queue(user -> {
+            user.openPrivateChannel().queue((channel) -> {
+                channel.sendMessage(message).queue();
+            });
+        });
+    }
+
+    public static void updateRole(final String roleID, final String userID, final boolean isAdding) throws BotException {
+        final Guild pacifistaGuild = getPacifistaGuild();
+        final Role role = pacifistaGuild.getRoleById(roleID);
+
+        if (role == null)
+            throw new BotException("The role does not exists: id = " + roleID);
+        if (isAdding)
+            pacifistaGuild.addRoleToMember(userID, role).complete();
+        else
+            pacifistaGuild.removeRoleFromMember(userID, role).complete();
+    }
+
     public static void clearChannel(final String channelID) {
         new Thread(() -> {
             try {

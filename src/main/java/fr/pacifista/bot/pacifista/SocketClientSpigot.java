@@ -74,6 +74,12 @@ public class SocketClientSpigot {
                         exception.printStackTrace();
                     }
                 }
+
+                try {
+                    Thread.sleep(4000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }).start();
     }

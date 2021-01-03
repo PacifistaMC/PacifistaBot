@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.User;
 
 import java.util.List;
 
@@ -17,10 +18,10 @@ public class LogsCommand extends BotCommand {
     }
 
     @Override
-    public void execute(Member user, MessageChannel channel, List<String> args, final Message messageReceived) {
+    public void execute(User user, MessageChannel channel, List<String> args, final Message messageReceived) {
         if (!channel.getType().isGuild()) return;
         try {
-            if (!channel.getId().equals(Bot.getConfiguration().logID)) return;
+            if (!channel.getId().equals(Bot.getConfiguration().logChannelID)) return;
             ConsoleCommands.getLogs(args);
         } catch (BotException e) {
             e.printStackTrace();

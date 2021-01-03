@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.User;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ public class ClearChat extends BotCommand {
     }
 
     @Override
-    public void execute(Member user, MessageChannel channel, List<String> args, final Message messageReceived) {
+    public void execute(User user, MessageChannel channel, List<String> args, final Message messageReceived) {
         if (!channel.getType().isGuild()) return;
         Bot.clearChannel(channel.getId());
     }

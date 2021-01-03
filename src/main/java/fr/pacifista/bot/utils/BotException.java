@@ -52,7 +52,7 @@ public class BotException extends Exception {
                     embedBuilder.addField("Fichier de log erreur", logFile.getName(), true);
                     embedBuilder.addField("Message d'erreur", this.getMessage(), true);
                     embedBuilder.addField("Stack principale", this.getStackTrace()[0].toString(), false);
-                    Bot.sendMessageToChannel(embedBuilder.build(), Bot.getConfiguration().logID);
+                    Bot.sendMessageToChannel(embedBuilder.build(), Bot.getConfiguration().logChannelID);
                 } catch (BotException e) {
                     System.err.println(ConsoleColors.RED + "Impossible d'envoyer le embed d'erreur dans log." + ConsoleColors.RESET);
                 }
