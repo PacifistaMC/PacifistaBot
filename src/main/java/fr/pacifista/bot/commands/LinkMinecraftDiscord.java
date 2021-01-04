@@ -27,6 +27,7 @@ public class LinkMinecraftDiscord extends BotCommand {
                     toSend.addProperty("code", SocketDiscordClientCode.LINK_MINECRAFT_AND_DISCORD);
                     toSend.addProperty("discordUserID", userID);
                     toSend.addProperty("generatedCode", code.toString());
+                    toSend.addProperty("discordUserTag", user.getAsTag());
                     SocketClientSpigot.sendMessageToServer(toSend.toString());
                     channel.sendMessage(":arrow_up: Envoi de la demande au serveur...").queue();
                 } catch (IllegalArgumentException exception) {

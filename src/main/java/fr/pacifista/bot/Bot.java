@@ -38,7 +38,11 @@ public class Bot {
         }
     }
 
-    private static Bot getInstance() throws BotException {
+    public JDA getApi() {
+        return api;
+    }
+
+    public static Bot getInstance() throws BotException {
         if (instance == null)
             throw new BotException(BotException.BOT_SESSION_NOT_EXISTS);
         return instance;
@@ -114,9 +118,9 @@ public class Bot {
         if (role == null)
             throw new BotException("The role does not exists: id = " + roleID);
         if (isAdding)
-            pacifistaGuild.addRoleToMember(userID, role).complete();
+            pacifistaGuild.addRoleToMember(userID, role).queue();
         else
-            pacifistaGuild.removeRoleFromMember(userID, role).complete();
+            pacifistaGuild.removeRoleFromMember(userID, role).queue();
     }
 
     public static void clearChannel(final String channelID) {

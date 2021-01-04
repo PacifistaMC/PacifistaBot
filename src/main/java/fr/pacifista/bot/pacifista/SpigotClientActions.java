@@ -8,9 +8,10 @@ import fr.pacifista.bot.BotConfiguration;
 import fr.pacifista.bot.utils.BotException;
 import fr.pacifista.bot.utils.ConsoleColors;
 import fr.pacifista.bot.utils.Utils;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.*;
+
+import java.util.List;
 
 import static fr.pacifista.bot.pacifista.SocketDiscordClientCode.*;
 
@@ -47,11 +48,7 @@ public class SpigotClientActions {
                     final String userIDDiscord = res.get("userDiscordID").getAsString();
                     final String rankName = res.get("rankName").getAsString();
 
-                    Bot.updateRole(botConfiguration.donateurRoleID, userIDDiscord, false);
-                    Bot.updateRole(botConfiguration.aventurierRoleID, userIDDiscord, false);
-                    Bot.updateRole(botConfiguration.paladinRoleID, userIDDiscord, false);
-                    Bot.updateRole(botConfiguration.eliteRoleID, userIDDiscord, false);
-                    Bot.updateRole(botConfiguration.legendaireRoleID, userIDDiscord, false);
+                    removeAllPacifistaRanks(userIDDiscord, botConfiguration);
                     if (rankName.equalsIgnoreCase("Donateur"))
                         Bot.updateRole(botConfiguration.donateurRoleID, userIDDiscord, true);
                     else if (rankName.equalsIgnoreCase("Aventurier"))
@@ -66,17 +63,33 @@ public class SpigotClientActions {
                 case UNLINK_MINECRAFT_AND_DISCORD:
                     final String userDiscordID = res.get("userDiscordID").getAsString();
 
-                    Bot.updateRole(botConfiguration.donateurRoleID, userDiscordID, false);
-                    Bot.updateRole(botConfiguration.aventurierRoleID, userDiscordID, false);
-                    Bot.updateRole(botConfiguration.paladinRoleID, userDiscordID, false);
-                    Bot.updateRole(botConfiguration.eliteRoleID, userDiscordID, false);
-                    Bot.updateRole(botConfiguration.legendaireRoleID, userDiscordID, false);
+                    removeAllPacifistaRanks(userDiscordID, botConfiguration);
                     break;
             }
         } catch (IllegalStateException | JsonSyntaxException | NullPointerException ignored) {
         } catch (BotException e) {
             e.printStackTrace();
         }
+    }
+
+    private static void removeAllPacifistaRanks(final String userID, final BotConfiguration botConfiguration) throws BotException {
+        final Guild pacifistaGuild = Bot.getPacifistaGuild();
+        final JDA jda = Bot.getInstance().getApi();
+
+        jda.retrieveUserById(userID).queue(user -> {
+            final Member member = pacifistaGuild.getMember(user);
+            if (member == null) return;
+
+            for (final Role role : member.getRoles()) {
+                if (role.getId().equals(botConfiguration.donateurRoleID) ||
+                        role.getId().equals(botConfiguration.aventurierRoleID) ||
+                        role.getId().equals(botConfiguration.paladinRoleID) ||
+                        role.getId().equals(botConfiguration.eliteRoleID) ||
+                        role.getId().equals(botConfiguration.legendaireRoleID)) {
+                    pacifistaGuild.removeRoleFromMember(member, role).queue();
+                }
+            }
+        });
     }
 
     private static void fetchPlayersPacifista(final JsonObject data) {
