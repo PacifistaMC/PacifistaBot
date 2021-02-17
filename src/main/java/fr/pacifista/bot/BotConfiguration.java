@@ -18,6 +18,7 @@ public class BotConfiguration {
     public String discordToken;
     public String bienvenueChannelID;
     public String logChannelID;
+    public String helpopChannelID;
     public String playerRoleID;
     public String donateurRoleID;
     public String aventurierRoleID;
@@ -49,6 +50,10 @@ public class BotConfiguration {
         if (this.logChannelID == null) {
             System.out.print(ConsoleColors.GREEN + "Channel id de log:" + System.lineSeparator() + ConsoleColors.RESET);
             this.logChannelID = scanner.nextLine();
+        }
+        if (this.helpopChannelID == null) {
+            System.out.print(ConsoleColors.GREEN + "Channel ID de helpop:" + System.lineSeparator() + ConsoleColors.RESET);
+            this.helpopChannelID = scanner.nextLine();
         }
         if (this.pacifistaChannelID == null) {
             System.out.print(ConsoleColors.GREEN + "Channel id du chat pacifista:" + System.lineSeparator() + ConsoleColors.RESET);

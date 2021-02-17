@@ -8,10 +8,12 @@ import fr.pacifista.bot.BotConfiguration;
 import fr.pacifista.bot.utils.BotException;
 import fr.pacifista.bot.utils.ConsoleColors;
 import fr.pacifista.bot.utils.Utils;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
 
-import java.util.List;
+import java.awt.*;
+import java.util.UUID;
 
 import static fr.pacifista.bot.pacifista.SocketDiscordClientCode.*;
 
@@ -20,7 +22,7 @@ public class SpigotClientActions {
     protected static void onReceivedMessage(final String response) {
         try {
             final BotConfiguration botConfiguration = Bot.getConfiguration();
-            JsonObject res = JsonParser.parseString(response).getAsJsonObject();
+            final JsonObject res = JsonParser.parseString(response).getAsJsonObject();
 
             switch (res.get("type").getAsString()) {
                 case FETCH_PLAYER_DATA:
@@ -64,6 +66,24 @@ public class SpigotClientActions {
                     final String userDiscordID = res.get("userDiscordID").getAsString();
 
                     removeAllPacifistaRanks(userDiscordID, botConfiguration);
+                    break;
+                case HELPOP_MESSAGE:
+                    final JDA bot = Bot.getInstance().getApi();
+                    final String playerNameHelpop = res.get("playerName").getAsString();
+                    final String playerUUID = res.get("playerUUID").getAsString();
+                    final String serverName = res.get("server").getAsString();
+                    final String messageHelpop = res.get("message").getAsString();
+
+                    final MessageEmbed messageEmbed = new EmbedBuilder()
+                            .setColor(new Color(255, 87, 51))
+                            .setFooter("Pacifista - Helpop message", bot.getSelfUser().getAvatarUrl())
+                            .setTitle(":warning: " + playerNameHelpop + " demande de l'aide !")
+                            .addField("Joueur", playerNameHelpop, true)
+                            .addField("Serveur", serverName, true)
+                            .addField("UUID du joueur", playerUUID, false)
+                            .addField("Message", messageHelpop, false)
+                            .build();
+                    Bot.sendMessageToChannel(messageEmbed, Bot.getConfiguration().helpopChannelID);
                     break;
             }
         } catch (IllegalStateException | JsonSyntaxException | NullPointerException ignored) {
