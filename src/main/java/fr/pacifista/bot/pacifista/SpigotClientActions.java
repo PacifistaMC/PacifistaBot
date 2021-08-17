@@ -13,7 +13,6 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
 
 import java.awt.*;
-import java.util.UUID;
 
 import static fr.pacifista.bot.pacifista.SocketDiscordClientCode.*;
 
@@ -30,7 +29,7 @@ public class SpigotClientActions {
                     break;
                 case Events.PLAYER_CHAT:
                     final String playerName = res.get("name").getAsString();
-                    final String message = res.get("message").getAsString();
+                    final String message = res.get("message").getAsString().replace("@", "");
 
                     final StringBuilder str = new StringBuilder();
                     for (int i = 0; i < message.length(); ++i) {

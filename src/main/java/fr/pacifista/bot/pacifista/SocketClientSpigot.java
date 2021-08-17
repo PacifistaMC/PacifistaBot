@@ -4,9 +4,7 @@ import fr.pacifista.bot.Bot;
 import fr.pacifista.bot.utils.BotException;
 import fr.pacifista.bot.utils.ConsoleColors;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
 
@@ -18,7 +16,8 @@ public class SocketClientSpigot {
     private final int port;
     private Socket socket;
     private boolean running = true;
-    private BufferedInputStream reader;
+    private InputStreamReader inputStreamReader;
+    private BufferedReader reader;
     private PrintWriter writer;
 
     private SocketClientSpigot(final String ip, final int port) {
@@ -45,8 +44,8 @@ public class SocketClientSpigot {
                 System.out.println(ConsoleColors.GREEN + "[Socket] - Socket connecté" + ConsoleColors.RESET);
 
                 try {
-
-                    reader = new BufferedInputStream(this.socket.getInputStream());
+                    inputStreamReader = new InputStreamReader(this.socket.getInputStream());
+                    reader = new BufferedReader(inputStreamReader);
                     writer = new PrintWriter(this.socket.getOutputStream());
 
                     sendMessage("LOGIN DISCORD");
@@ -61,6 +60,8 @@ public class SocketClientSpigot {
                     System.err.println(ConsoleColors.RED + "[BotException] - " + e.getMessage() + ConsoleColors.WHITE);
                 } finally {
                     try {
+                        if (inputStreamReader != null)
+                            inputStreamReader.close();
                         if (reader != null)
                             reader.close();
                         if (writer != null)
@@ -86,14 +87,10 @@ public class SocketClientSpigot {
 
     private void readClient() throws IOException {
         try {
-            byte[] messageByte = new byte[10000];
-            int stream = reader.read(messageByte);
-            if (stream == -1) {
-                this.socket.close();
-                return;
+            final String line = reader.readLine();
+            if (line != null) {
+                new Thread(() -> SpigotClientActions.onReceivedMessage(line)).start();
             }
-            final String message = new String(messageByte, 0, stream).replaceAll("\\r\\n|\\r|\\n", "");
-            new Thread(() -> SpigotClientActions.onReceivedMessage(message)).start();
         } catch (SocketException e) {
             if (e.getMessage().equals("Socket closed")) return;
             e.printStackTrace();
@@ -103,7 +100,7 @@ public class SocketClientSpigot {
     private void sendMessage(final String message) throws BotException {
         if (!running || socket == null || !socket.isConnected() || socket.isClosed())
             throw new BotException(BotException.PACIFISTA_SOCKET_NOT_CONNECTED);
-        writer.write(message);
+        writer.write(message + System.lineSeparator());
         writer.flush();
     }
 
