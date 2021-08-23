@@ -89,11 +89,16 @@ public class SocketClientSpigot {
         try {
             final String line = reader.readLine();
             if (line != null) {
-                new Thread(() -> SpigotClientActions.onReceivedMessage(line)).start();
+                if (line.length() > 0) {
+                    new Thread(() -> SpigotClientActions.onReceivedMessage(line)).start();
+                }
+            } else {
+                this.socket.close();
             }
         } catch (SocketException e) {
-            if (e.getMessage().equals("Socket closed")) return;
-            e.printStackTrace();
+            if (!this.socket.isClosed()) {
+                e.printStackTrace();
+            }
         }
     }
 
