@@ -50,16 +50,18 @@ public class SpigotClientActions {
                     final String rankName = res.get("rankName").getAsString();
 
                     removeAllPacifistaRanks(userIDDiscord, botConfiguration);
-                    if (rankName.equalsIgnoreCase("Donateur"))
+
+                    if (rankName.equalsIgnoreCase("Donateur")) {
                         Bot.updateRole(botConfiguration.donateurRoleID, userIDDiscord, true);
-                    else if (rankName.equalsIgnoreCase("Aventurier"))
+                    } else if (rankName.equalsIgnoreCase("Aventurier")) {
                         Bot.updateRole(botConfiguration.aventurierRoleID, userIDDiscord, true);
-                    else if (rankName.equalsIgnoreCase("Paladin"))
+                    } else if (rankName.equalsIgnoreCase("Paladin")) {
                         Bot.updateRole(botConfiguration.paladinRoleID, userIDDiscord, true);
-                    else if (rankName.equalsIgnoreCase("Elite"))
+                    } else if (rankName.equalsIgnoreCase("Elite")) {
                         Bot.updateRole(botConfiguration.eliteRoleID, userIDDiscord, true);
-                    else if (rankName.equalsIgnoreCase("Legendaire") || rankName.equalsIgnoreCase("Ami"))
+                    } else if (rankName.equalsIgnoreCase("Legendaire") || rankName.equalsIgnoreCase("Ami")) {
                         Bot.updateRole(botConfiguration.legendaireRoleID, userIDDiscord, true);
+                    }
                     break;
                 case UNLINK_MINECRAFT_AND_DISCORD:
                     final String userDiscordID = res.get("userDiscordID").getAsString();
@@ -113,17 +115,7 @@ public class SpigotClientActions {
 
     private static void fetchPlayersPacifista(final JsonObject data) {
         final int playerCount = data.get("playerCount").getAsInt();
-        /*final JsonArray playersData = data.get("data").getAsJsonArray();
-        final int arraySize = playersData.size();*/
-
         Bot.refreshActivityMsg(playerCount);
-        /*for (int i = 0; i < arraySize; ++i) {
-            final JsonObject playerData = playersData.get(i).getAsJsonObject();
-            final String playerName = playerData.get("playerName").getAsString();
-            final UUID playerUUID = UUID.fromString(playerData.get("uuid").getAsString());
-            final String serverName = playerData.get("server").getAsString();
-            final int playerPing = playerData.get("ping").getAsInt();
-        }*/
     }
 
     public static void sendDiscordMessageToPacifista(final Member user, final Message message, final MessageChannel channel) {

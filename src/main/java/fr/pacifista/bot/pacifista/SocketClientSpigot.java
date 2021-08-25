@@ -53,7 +53,8 @@ public class SocketClientSpigot {
                         try {
                             readClient();
                         } catch (IOException exception) {
-                            exception.printStackTrace();
+                            if (!this.socket.isClosed())
+                                exception.printStackTrace();
                         }
                     }
                 } catch (IOException | BotException e) {
@@ -94,6 +95,7 @@ public class SocketClientSpigot {
                 }
             } else {
                 this.socket.close();
+                throw new IOException("Line null");
             }
         } catch (SocketException e) {
             if (!this.socket.isClosed()) {

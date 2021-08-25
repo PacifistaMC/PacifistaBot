@@ -1,4 +1,4 @@
-package fr.pacifista.bot.modules;
+package fr.pacifista.bot.modules.tasks;
 
 import com.google.gson.JsonObject;
 import fr.pacifista.bot.pacifista.SocketClientSpigot;
@@ -6,34 +6,8 @@ import fr.pacifista.bot.pacifista.SocketDiscordClientCode;
 import fr.pacifista.bot.utils.BotException;
 
 import java.util.Timer;
-import java.util.TimerTask;
 
-public class ScheduledTasks {
-
-    public static void init() {
-        new Thread(() -> {
-            Timer timer = new Timer();
-
-            new RefreshBotActivity(timer, 10000);
-        }).start();
-    }
-}
-
-abstract class Task {
-    Task(Timer timer, int period) {
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                task();
-            }
-        }, 0, period);
-    }
-
-    abstract void task();
-}
-
-class RefreshBotActivity extends Task {
-
+public class RefreshBotActivity extends BotTask {
     RefreshBotActivity(Timer timer, int period) {
         super(timer, period);
     }

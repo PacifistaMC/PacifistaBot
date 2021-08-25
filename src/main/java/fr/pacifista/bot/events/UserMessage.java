@@ -76,6 +76,5 @@ public class UserMessage extends ListenerAdapter {
                 return;
             }
         }
-        //channel.sendMessage(":warning: La commande ``" + command + "`` n'existe pas.\n``!help pour obtenir la liste des commandes``").queue();
     }
 }

@@ -1,6 +1,6 @@
 package fr.pacifista.bot;
 
-import fr.pacifista.bot.modules.ScheduledTasks;
+import fr.pacifista.bot.modules.tasks.ScheduledTasks;
 import fr.pacifista.bot.modules.ConsoleCommands;
 import fr.pacifista.bot.pacifista.SocketClientSpigot;
 import fr.pacifista.bot.utils.BotException;
