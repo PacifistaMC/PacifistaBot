@@ -1,6 +1,5 @@
 .idea
-logs/
-target/
-data/
-data/botConfiguration.json
-pacifistabot-discord.iml
+target
+data
+crypt.key
+*.iml
