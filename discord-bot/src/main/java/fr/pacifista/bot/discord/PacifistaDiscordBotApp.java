@@ -9,7 +9,8 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
         "fr.pacifista"
 })
 @EnableFeignClients(basePackages = {
-        "fr.pacifista"
+        "fr.pacifista",
+        "com.funixproductions"
 })
 public class PacifistaDiscordBotApp {
     public static void main(String[] args) {
