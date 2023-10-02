@@ -25,6 +25,12 @@
             <artifactId>JDA</artifactId>
             <version>${discord.jda.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>fr.pacifista.api.support.tickets.client</groupId>
+            <artifactId>pacifista-support-tickets-client</artifactId>
+            <version>1.5.1.4</version>
+        </dependency>
     </dependencies>
 
     <build>
