@@ -2,6 +2,7 @@ package fr.pacifista.bot.discord.events;
 
 import fr.pacifista.api.support.tickets.client.dtos.PacifistaSupportTicketDTO;
 import fr.pacifista.api.support.tickets.client.enums.TicketCreationSource;
+import fr.pacifista.api.support.tickets.client.enums.TicketStatus;
 import fr.pacifista.api.support.tickets.client.enums.TicketType;
 import fr.pacifista.bot.discord.api.PacifistaTicketClient;
 import fr.pacifista.bot.discord.config.Config;
@@ -86,6 +87,7 @@ public class TicketInteractions extends ListenerAdapter {
             ticketDTO.setCreationSource(TicketCreationSource.DISCORD);
             ticketDTO.setType(ticketType);
             ticketDTO.setObject(object);
+            ticketDTO.setStatus(TicketStatus.CREATED);
 
             ticketUtils.createTicket(event, ticketType);
             ticketClient.create(ticketDTO);
