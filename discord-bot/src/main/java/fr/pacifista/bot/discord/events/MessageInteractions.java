@@ -28,11 +28,11 @@ public class MessageInteractions extends ListenerAdapter {
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         Channel channel = event.getChannel();
-        String ticketOwnerUsername = channel.getName().split("-")[1];
-        Member ticketOwner = event.getGuild().getMembersByName(ticketOwnerUsername, true).getFirst();
         Message message = event.getMessage();
 
         if (channel.getType() == ChannelType.TEXT && channel.getName().startsWith("ticket-")) {
+            String ticketOwnerUsername = channel.getName().split("-")[1];
+            Member ticketOwner = event.getGuild().getMembersByName(ticketOwnerUsername, true).getFirst();
             PacifistaTicketClient ticketClient = new PacifistaTicketClient(this.config);
             PacifistaSupportTicketDTO ticketDTO = ticketClient.getAll("0", "1", String.format("createdById:like:%s", ticketOwner.getId()), "").getContent().getFirst();
 
