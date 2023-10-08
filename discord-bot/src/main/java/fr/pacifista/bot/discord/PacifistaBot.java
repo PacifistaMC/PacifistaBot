@@ -1,7 +1,7 @@
 package fr.pacifista.bot.discord;
 
 import fr.pacifista.bot.discord.config.Config;
-import fr.pacifista.bot.discord.events.Buttons;
+import fr.pacifista.bot.discord.events.TicketInteractions;
 import fr.pacifista.bot.discord.utils.TicketUtils;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,6 +35,8 @@ public class PacifistaBot {
 
     private String ticketsModRoleID;
 
+    private String pacifistaApiToken;
+
     TicketUtils ticketUtils;
 
     @Bean
@@ -44,6 +46,7 @@ public class PacifistaBot {
         config.setTicketsCategoryId(this.ticketsCategoryId);
         config.setTicketsLogsCategoryId(this.ticketsLogsCategoryId);
         config.setTicketsModRoleID(this.ticketsModRoleID);
+        config.setPacifistaApiToken(this.pacifistaApiToken);
 
         return config;
     }
@@ -59,7 +62,7 @@ public class PacifistaBot {
                 "https://pacifista.fr"
         ));
 
-        jdaBuilder.addEventListeners(new Buttons(this.getConfig()));
+        jdaBuilder.addEventListeners(new TicketInteractions(this.getConfig()));
 
         log.info("Starting discord bot...");
         return jdaBuilder.build().awaitReady();

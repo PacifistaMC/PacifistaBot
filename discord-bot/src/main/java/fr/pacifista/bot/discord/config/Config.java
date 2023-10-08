@@ -11,4 +11,6 @@ public class Config {
     private String ticketsLogsCategoryId;
 
     private String ticketsModRoleID;
+
+    private String pacifistaApiToken;
 }
