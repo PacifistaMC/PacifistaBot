@@ -67,7 +67,7 @@ public class TicketInteractions extends ListenerAdapter {
 
     @Override
     public void onModalInteraction(@NotNull ModalInteractionEvent event) {
-        TicketUtils ticketUtils = new TicketUtils(event.getJDA(), this.botConfig);
+        TicketUtils ticketUtils = new TicketUtils(this.botConfig);
         PacifistaTicketClient ticketClient = new PacifistaTicketClient(this.botConfig);
         String interactionId = event.getModalId();
         String modalId = interactionId.split(",")[0];

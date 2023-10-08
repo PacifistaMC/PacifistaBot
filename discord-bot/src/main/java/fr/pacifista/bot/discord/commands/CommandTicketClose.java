@@ -2,10 +2,12 @@ package fr.pacifista.bot.discord.commands;
 
 import lombok.NonNull;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,11 @@ public class CommandTicketClose extends Command {
     @Override
     public String getCommandDescription() {
         return "Ferme le ticket actuel !";
+    }
+
+    @Override
+    public DefaultMemberPermissions getCommandPermissions() {
+        return DefaultMemberPermissions.enabledFor(Permission.ALL_CHANNEL_PERMISSIONS);
     }
 
     @Override

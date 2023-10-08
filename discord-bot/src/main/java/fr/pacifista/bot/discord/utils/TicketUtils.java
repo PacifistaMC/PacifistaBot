@@ -4,41 +4,22 @@ import fr.pacifista.api.support.tickets.client.enums.TicketType;
 import fr.pacifista.bot.discord.config.Config;
 import lombok.NonNull;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.channel.concrete.Category;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
-import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.springframework.stereotype.Service;
 
 import java.util.EnumSet;
 
 @Service
 public class TicketUtils {
-    private final JDA jda;
     private final Config config;
 
-    public TicketUtils(final JDA jda, Config config) {
-        this.jda = jda;
+    public TicketUtils(Config config) {
         this.config = config;
-
-        sendTicketMessage();
-    }
-
-    public void sendTicketMessage() {
-        TextChannel channel = jda.getTextChannelById(this.config.getTicketsChannelId());
-
-        EmbedBuilder embed = new EmbedBuilder()
-                .setColor(Colors.PACIFISTA_COLOR)
-                .setTitle("🎫 Tickets")
-                .setDescription("Besoin de nous contacter ? Clique sur le bouton ci-dessous pour créer un ticket !");
-
-        Button button = Button.primary("ticket-create", "Créer un ticket");
-
-        channel.sendMessageEmbeds(embed.build()).addActionRow(button).queue();
     }
 
     public void createTicket(@NonNull ModalInteractionEvent event, TicketType ticketType) {

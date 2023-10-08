@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.components.ItemComponent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.springframework.stereotype.Service;
@@ -52,6 +53,11 @@ public class CommandIP extends Command {
     @Override
     public String getCommandDescription() {
         return "Affiche l'ip du serveur";
+    }
+
+    @Override
+    public DefaultMemberPermissions getCommandPermissions() {
+        return DefaultMemberPermissions.ENABLED;
     }
 
     @Override
