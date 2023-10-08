@@ -62,7 +62,8 @@ public class TicketUtils {
                 .setColor(Colors.PACIFISTA_COLOR)
                 .setTitle(String.format("Ticket de %s (%s)", event.getMember().getUser().getEffectiveName(), event.getMember().getUser().getName()))
                 .setDescription("Ton ticket à été crée. Merci de patienter, un modérateur viendra y répondre rapidement.")
-                .addField(new MessageEmbed.Field("Type", ticketType.name(), true));
+                .addField(new MessageEmbed.Field("Type", ticketType.name(), true))
+                .addField(new MessageEmbed.Field("Objet", event.getValue("object").getAsString(), true));
 
         ticketChannel.sendMessageEmbeds(embed.build())
                 .queue();

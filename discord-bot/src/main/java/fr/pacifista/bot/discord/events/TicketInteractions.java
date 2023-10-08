@@ -57,7 +57,7 @@ public class TicketInteractions extends ListenerAdapter {
                 .build();
 
         if (selectId.equals("ticket-create")) {
-            Modal modal = Modal.create(String.format("ticket-create_%s", ticketType), "Crée un ticket")
+            Modal modal = Modal.create(String.format("ticket-create,%s", ticketType), "Crée un ticket")
                     .addActionRow(object)
                     .build();
 
@@ -67,11 +67,11 @@ public class TicketInteractions extends ListenerAdapter {
 
     @Override
     public void onModalInteraction(@NotNull ModalInteractionEvent event) {
-        PacifistaTicketClient ticketClient = new PacifistaTicketClient(this.botConfig);
         TicketUtils ticketUtils = new TicketUtils(event.getJDA(), this.botConfig);
+        PacifistaTicketClient ticketClient = new PacifistaTicketClient(this.botConfig);
         String interactionId = event.getModalId();
-        String modalId = interactionId.split("_")[0];
-        String arg = interactionId.split("_")[1];
+        String modalId = interactionId.split(",")[0];
+        String arg = interactionId.split(",")[1];
 
         User user = event.getUser();
 
@@ -87,8 +87,8 @@ public class TicketInteractions extends ListenerAdapter {
             ticketDTO.setType(ticketType);
             ticketDTO.setObject(object);
 
-            ticketClient.create(ticketDTO);
             ticketUtils.createTicket(event, ticketType);
+            ticketClient.create(ticketDTO);
         }
     }
 }
