@@ -1,8 +1,8 @@
 package fr.pacifista.bot.discord;
 
 import fr.pacifista.bot.discord.config.Config;
+import fr.pacifista.bot.discord.events.MessageInteractions;
 import fr.pacifista.bot.discord.events.TicketInteractions;
-import fr.pacifista.bot.discord.utils.TicketUtils;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -37,8 +37,6 @@ public class PacifistaBot {
 
     private String pacifistaApiToken;
 
-    TicketUtils ticketUtils;
-
     @Bean
     public Config getConfig() {
         Config config = new Config();
@@ -56,6 +54,7 @@ public class PacifistaBot {
         final JDABuilder jdaBuilder = JDABuilder.createDefault(botToken);
 
         jdaBuilder.enableIntents(GatewayIntent.GUILD_MEMBERS);
+        jdaBuilder.enableIntents(GatewayIntent.MESSAGE_CONTENT);
         jdaBuilder.setActivity(Activity.of(
                 Activity.ActivityType.WATCHING,
                 "0 joueurs",
@@ -63,6 +62,7 @@ public class PacifistaBot {
         ));
 
         jdaBuilder.addEventListeners(new TicketInteractions(this.getConfig()));
+        jdaBuilder.addEventListeners(new MessageInteractions(this.getConfig()));
 
         log.info("Starting discord bot...");
         return jdaBuilder.build().awaitReady();

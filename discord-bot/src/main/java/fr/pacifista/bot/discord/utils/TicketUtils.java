@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.channel.concrete.Category;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Service;
 
 import java.util.EnumSet;
@@ -48,5 +49,9 @@ public class TicketUtils {
 
         ticketChannel.sendMessageEmbeds(embed.build())
                 .queue();
+    }
+
+    public void registerTicketMessage(@NonNull MessageReceivedEvent event) {
+
     }
 }
