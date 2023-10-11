@@ -15,10 +15,10 @@ import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class TicketClose extends Button {
+public class TicketCloseButton extends Button {
     final Config botConfig;
 
-    public TicketClose(Config botConfig) {
+    public TicketCloseButton(Config botConfig) {
         this.botConfig = botConfig;
     }
 

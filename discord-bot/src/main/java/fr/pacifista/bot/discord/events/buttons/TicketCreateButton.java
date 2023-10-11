@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TicketCreate extends Button {
+public class TicketCreateButton extends Button {
     List<SelectOption> getOptions() {
         List<SelectOption> options = new ArrayList<>();
 

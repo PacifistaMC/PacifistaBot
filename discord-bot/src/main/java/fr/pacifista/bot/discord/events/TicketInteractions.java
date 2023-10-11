@@ -6,8 +6,8 @@ import fr.pacifista.api.support.tickets.client.enums.TicketStatus;
 import fr.pacifista.api.support.tickets.client.enums.TicketType;
 import fr.pacifista.bot.discord.api.PacifistaTicketClient;
 import fr.pacifista.bot.discord.config.Config;
-import fr.pacifista.bot.discord.events.buttons.TicketClose;
-import fr.pacifista.bot.discord.events.buttons.TicketCreate;
+import fr.pacifista.bot.discord.events.buttons.TicketCloseButton;
+import fr.pacifista.bot.discord.events.buttons.TicketCreateButton;
 import fr.pacifista.bot.discord.utils.TicketUtils;
 import lombok.NonNull;
 import net.dv8tion.jda.api.entities.User;
@@ -37,10 +37,10 @@ public class TicketInteractions extends ListenerAdapter {
 
         switch (buttonId) {
             case "ticket-create":
-                new TicketCreate().onButton(event);
+                new TicketCreateButton().onButton(event);
                 break;
             case "ticket-close":
-                new TicketClose(this.botConfig).onButton(event);
+                new TicketCloseButton(this.botConfig).onButton(event);
                 break;
         }
     }
