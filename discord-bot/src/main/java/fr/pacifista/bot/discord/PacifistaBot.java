@@ -1,41 +1,33 @@
 package fr.pacifista.bot.discord;
 
+import fr.pacifista.bot.discord.config.BotConfig;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.requests.GatewayIntent;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Getter
-@Setter
-@Configuration
 @Slf4j(topic = "PacifistaBot")
-@ConfigurationProperties("discord.bot.config")
+@Configuration
 public class PacifistaBot {
+    private final JDA jda;
+    private final BotConfig botConfig;
 
-    /**
-     * Discord bot token get from discord app
-     */
-    private String botToken;
+    public PacifistaBot(BotConfig botConfig, JDA jda) {
+        try {
+            this.botConfig = botConfig;
+            this.jda = jda;
 
-    @Bean(destroyMethod = "shutdown")
-    public JDA discordInstance() throws InterruptedException {
-        final JDABuilder jdaBuilder = JDABuilder.createDefault(botToken);
-
-        jdaBuilder.enableIntents(GatewayIntent.GUILD_MEMBERS);
-        jdaBuilder.setActivity(Activity.of(
-                Activity.ActivityType.WATCHING,
-                "0 joueurs",
-                "https://pacifista.fr"
-        ));
-
-        log.info("Starting discord bot...");
-        return jdaBuilder.build().awaitReady();
+            log.info("Bot prêt !");
+        } catch (Exception e) {
+            log.error("Une erreur est survenue lors du lancement du bot discord. {}", e.getMessage());
+            throw e;
+        }
     }
 
+    @Bean
+    public PacifistaBot getPacifistaBot() {
+        return this;
+    }
 }
