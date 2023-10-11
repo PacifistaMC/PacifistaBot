@@ -1,9 +1,9 @@
 package fr.pacifista.bot.discord.commands;
 
+import fr.pacifista.bot.discord.PacifistaBot;
 import fr.pacifista.bot.discord.utils.Colors;
 import lombok.NonNull;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -41,8 +41,8 @@ public class CommandIP extends Command {
             ).withEmoji(Emoji.fromUnicode("💰"))
     );
 
-    public CommandIP(JDA jda) {
-        super(jda);
+    public CommandIP(PacifistaBot pacifistaBot) {
+        super(pacifistaBot.getJda());
     }
 
     @Override

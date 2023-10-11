@@ -1,11 +1,11 @@
 package fr.pacifista.bot.discord.events;
 
+import fr.pacifista.api.support.tickets.client.clients.PacifistaSupportTicketClient;
 import fr.pacifista.api.support.tickets.client.dtos.PacifistaSupportTicketDTO;
 import fr.pacifista.api.support.tickets.client.enums.TicketCreationSource;
 import fr.pacifista.api.support.tickets.client.enums.TicketStatus;
 import fr.pacifista.api.support.tickets.client.enums.TicketType;
-import fr.pacifista.bot.discord.api.PacifistaTicketClient;
-import fr.pacifista.bot.discord.config.Config;
+import fr.pacifista.bot.discord.PacifistaBot;
 import fr.pacifista.bot.discord.events.buttons.TicketCloseButton;
 import fr.pacifista.bot.discord.events.buttons.TicketCreateButton;
 import fr.pacifista.bot.discord.utils.TicketUtils;
@@ -25,10 +25,14 @@ import java.util.Date;
 
 @Service
 public class TicketInteractions extends ListenerAdapter {
-    private final Config botConfig;
+    private final PacifistaBot pacifistaBot;
+    private final PacifistaSupportTicketClient ticketClient;
 
-    public TicketInteractions(Config botConfig) {
-        this.botConfig = botConfig;
+    public TicketInteractions(PacifistaBot pacifistaBot,
+                              PacifistaSupportTicketClient ticketClient) {
+        this.pacifistaBot = pacifistaBot;
+        this.ticketClient = ticketClient;
+        pacifistaBot.getJda().addEventListener(this);
     }
 
     @Override
@@ -40,7 +44,7 @@ public class TicketInteractions extends ListenerAdapter {
                 new TicketCreateButton().onButton(event);
                 break;
             case "ticket-close":
-                new TicketCloseButton(this.botConfig).onButton(event);
+                new TicketCloseButton(this.pacifistaBot).onButton(event);
                 break;
         }
     }
@@ -68,8 +72,7 @@ public class TicketInteractions extends ListenerAdapter {
 
     @Override
     public void onModalInteraction(@NotNull ModalInteractionEvent event) {
-        TicketUtils ticketUtils = new TicketUtils(this.botConfig);
-        PacifistaTicketClient ticketClient = new PacifistaTicketClient(this.botConfig);
+        TicketUtils ticketUtils = new TicketUtils(this.pacifistaBot);
         String interactionId = event.getModalId();
         String modalId = interactionId.split(",")[0];
         String arg = interactionId.split(",")[1];
@@ -90,7 +93,7 @@ public class TicketInteractions extends ListenerAdapter {
             ticketDTO.setStatus(TicketStatus.CREATED);
 
             ticketUtils.createTicket(event, ticketType);
-            ticketClient.create(ticketDTO);
+            this.ticketClient.create(ticketDTO);
         }
     }
 }

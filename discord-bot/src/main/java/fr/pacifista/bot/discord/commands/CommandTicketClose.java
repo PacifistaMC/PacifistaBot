@@ -1,7 +1,7 @@
 package fr.pacifista.bot.discord.commands;
 
+import fr.pacifista.bot.discord.PacifistaBot;
 import lombok.NonNull;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
@@ -14,8 +14,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class CommandTicketClose extends Command {
 
-    public CommandTicketClose(JDA jda) {
-        super(jda);
+    public CommandTicketClose(PacifistaBot pacifistaBot) {
+        super(pacifistaBot.getJda());
     }
 
     @Override
@@ -39,6 +39,7 @@ public class CommandTicketClose extends Command {
 
         if (channel.getType() != ChannelType.TEXT || !channel.getName().contains("ticket-")) {
             interactionEvent.reply(":warning: Ce salon n'est pas un ticket !").queue();
+            return;
         }
 
         Button button = Button.danger("ticket-close", "Fermer le ticket")

@@ -1,10 +1,9 @@
 package fr.pacifista.bot.discord.commands;
 
-import fr.pacifista.bot.discord.config.Config;
+import fr.pacifista.bot.discord.PacifistaBot;
 import fr.pacifista.bot.discord.utils.Colors;
 import lombok.NonNull;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -14,11 +13,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CommandSendTicketMessage extends Command {
-    private final Config config;
+    private final PacifistaBot pacifistaBot;
 
-    public CommandSendTicketMessage(JDA jda, Config config) {
-        super(jda);
-        this.config = config;
+    public CommandSendTicketMessage(PacifistaBot pacifistaBot) {
+        super(pacifistaBot.getJda());
+        this.pacifistaBot = pacifistaBot;
     }
 
     @Override
@@ -38,7 +37,7 @@ public class CommandSendTicketMessage extends Command {
 
     @Override
     public void onCommand(@NonNull SlashCommandInteractionEvent interactionEvent) {
-        TextChannel channel = interactionEvent.getGuild().getTextChannelById(this.config.getTicketsChannelId());
+        TextChannel channel = interactionEvent.getGuild().getTextChannelById(this.pacifistaBot.getBotConfig().getTicketsChannelId());
 
         EmbedBuilder embed = new EmbedBuilder()
                 .setColor(Colors.PACIFISTA_COLOR)

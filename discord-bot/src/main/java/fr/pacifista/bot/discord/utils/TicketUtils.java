@@ -1,7 +1,7 @@
 package fr.pacifista.bot.discord.utils;
 
 import fr.pacifista.api.support.tickets.client.enums.TicketType;
-import fr.pacifista.bot.discord.config.Config;
+import fr.pacifista.bot.discord.PacifistaBot;
 import lombok.NonNull;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
@@ -10,24 +10,23 @@ import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.channel.concrete.Category;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Service;
 
 import java.util.EnumSet;
 
 @Service
 public class TicketUtils {
-    private final Config config;
+    private final PacifistaBot pacifistaBot;
 
-    public TicketUtils(Config config) {
-        this.config = config;
+    public TicketUtils(PacifistaBot pacifistaBot) {
+        this.pacifistaBot = pacifistaBot;
     }
 
     public void createTicket(@NonNull ModalInteractionEvent event, TicketType ticketType) {
-        Category category = event.getJDA().getCategoryById(this.config.getTicketsCategoryId());
+        Category category = event.getJDA().getCategoryById(this.pacifistaBot.getBotConfig().getTicketsCategoryId());
         TextChannel ticketChannel = category.createTextChannel(String.format("ticket-%s", event.getUser().getGlobalName())).complete();
 
-        Role modRole = event.getJDA().getRoleById(this.config.getTicketsModRoleID());
+        Role modRole = event.getJDA().getRoleById(this.pacifistaBot.getBotConfig().getTicketsModRoleID());
         Role everyoneRole = event.getGuild().getRolesByName("@everyone", true).get(0);
 
         ticketChannel.getManager()
@@ -49,9 +48,5 @@ public class TicketUtils {
 
         ticketChannel.sendMessageEmbeds(embed.build())
                 .queue();
-    }
-
-    public void registerTicketMessage(@NonNull MessageReceivedEvent event) {
-
     }
 }
