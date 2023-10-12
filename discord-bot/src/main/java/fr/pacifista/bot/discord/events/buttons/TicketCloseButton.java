@@ -1,5 +1,8 @@
 package fr.pacifista.bot.discord.events.buttons;
 
+import fr.pacifista.api.support.tickets.client.clients.PacifistaSupportTicketClient;
+import fr.pacifista.api.support.tickets.client.dtos.PacifistaSupportTicketDTO;
+import fr.pacifista.api.support.tickets.client.enums.TicketStatus;
 import fr.pacifista.bot.discord.PacifistaBot;
 import fr.pacifista.bot.discord.utils.Colors;
 import lombok.NonNull;
@@ -16,10 +19,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class TicketCloseButton extends Button {
-    final PacifistaBot pacifistaBot;
+    private final PacifistaBot pacifistaBot;
+    private final PacifistaSupportTicketClient ticketClient;
 
-    public TicketCloseButton(PacifistaBot pacifistaBot) {
+    public TicketCloseButton(PacifistaBot pacifistaBot,
+                             PacifistaSupportTicketClient ticketClient) {
         this.pacifistaBot = pacifistaBot;
+        this.ticketClient = ticketClient;
     }
 
     @Override
@@ -27,6 +33,8 @@ public class TicketCloseButton extends Button {
         Role ticketModRole = event.getJDA().getRoleById(this.pacifistaBot.getBotConfig().getTicketsModRoleID());
         Channel channel = event.getChannel();
         Member member = event.getMember();
+        String ticketOwnerUsername = channel.getName().split("-")[1];
+        Member ticketOwner = event.getGuild().getMembersByName(ticketOwnerUsername, true).getFirst();
 
         if (channel.getType() != ChannelType.TEXT || !channel.getName().contains("ticket-")) {
             event.reply(":warning: Ce salon n'est pas un ticket !").queue();
@@ -43,7 +51,8 @@ public class TicketCloseButton extends Button {
 
         ticketChannel.getManager().setParent(ticketsLogsCategory).queue();
 
-        String archiveFormattedDate = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());
+        Date archivedDate = Date.from(event.getTimeCreated().toInstant());
+        String archiveFormattedDate = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(archivedDate);
 
         EmbedBuilder embed = new EmbedBuilder()
                 .setColor(Colors.PACIFISTA_COLOR)
@@ -51,5 +60,18 @@ public class TicketCloseButton extends Button {
                 .setDescription(String.format("Ticket archivé le `%s` par `%s` (`%s`)", archiveFormattedDate, member.getUser().getName(), member.getUser().getId()));
 
         ticketChannel.sendMessageEmbeds(embed.build()).queue();
+        closeTicket(ticketOwner.getId(), archivedDate);
+    }
+
+    private void closeTicket(String ticketOwnerId, Date updatedAt) {
+        PacifistaSupportTicketDTO ticketDTO = this.ticketClient.getAll(
+                "0",
+                "1",
+                String.format("createdById:like:%s", ticketOwnerId),
+                "").getContent().getFirst();
+
+        ticketDTO.setStatus(TicketStatus.SOLVED);
+        ticketDTO.setUpdatedAt(updatedAt);
+        this.ticketClient.update(ticketDTO);
     }
 }

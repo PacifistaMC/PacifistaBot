@@ -32,6 +32,7 @@ public class MessageInteractions extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
+        if (event.getAuthor().isBot()) return;
         Channel channel = event.getChannel();
         Message message = event.getMessage();
 
@@ -52,28 +53,8 @@ public class MessageInteractions extends ListenerAdapter {
             if (message.getTimeEdited() != null) ticketMessageDTO.setUpdatedAt(Date.from(message.getTimeEdited().toInstant()));
             ticketMessageDTO.setWrittenByName(ticketOwnerUsername);
             ticketMessageDTO.setWrittenById(ticketOwner.getId());
-        }
-    }
 
-    @Override
-    public void onMessageUpdate(@NotNull MessageUpdateEvent event) {
-        Channel channel = event.getChannel();
-        String ticketOwnerUsername = channel.getName().split("-")[1];
-        Member ticketOwner = event.getGuild().getMembersByName(ticketOwnerUsername, true).getFirst();
-        Message message = event.getMessage();
-
-        if (channel.getType() == ChannelType.TEXT && channel.getName().startsWith("ticket-")) {
-            PacifistaSupportTicketMessageDTO ticketMessageDTO = this.ticketMessageClient.getAll(
-                    "0",
-                    "0",
-                    String.format("createdById:like:%s", ticketOwner.getId()),
-                    "createdAt:desc"
-            ).getContent().getFirst();
-
-            ticketMessageDTO.setUpdatedAt(Date.from(message.getTimeEdited().toInstant()));
-            ticketMessageDTO.setMessage(message.getContentRaw());
-
-            this.ticketMessageClient.update(ticketMessageDTO);
+            this.ticketMessageClient.create(ticketMessageDTO);
         }
     }
 }
