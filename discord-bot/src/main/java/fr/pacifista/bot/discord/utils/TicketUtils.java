@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.concrete.Category;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
@@ -24,7 +25,10 @@ public class TicketUtils {
 
     public void createTicket(@NonNull ModalInteractionEvent event, TicketType ticketType) {
         Category category = event.getJDA().getCategoryById(this.pacifistaBot.getBotConfig().getTicketsCategoryId());
-        TextChannel ticketChannel = category.createTextChannel(String.format("ticket-%s", event.getUser().getGlobalName())).complete();
+        User ticketOwner = event.getUser();
+        TextChannel ticketChannel = category.createTextChannel(String.format("ticket-%s", ticketOwner.getGlobalName()))
+                .setTopic(ticketOwner.getId())
+                .complete();
 
         Role modRole = event.getJDA().getRoleById(this.pacifistaBot.getBotConfig().getTicketsModRoleID());
         Role everyoneRole = event.getGuild().getRolesByName("@everyone", true).get(0);
@@ -41,7 +45,7 @@ public class TicketUtils {
 
         EmbedBuilder embed = new EmbedBuilder()
                 .setColor(Colors.PACIFISTA_COLOR)
-                .setTitle(String.format("Ticket de %s (%s)", event.getMember().getUser().getEffectiveName(), event.getMember().getUser().getName()))
+                .setTitle(String.format("Ticket de %s (%s)", ticketOwner.getEffectiveName(), ticketOwner.getName()))
                 .setDescription("Ton ticket à été crée. Merci de patienter, un modérateur viendra y répondre rapidement.")
                 .addField(new MessageEmbed.Field("Type", ticketType.name(), true))
                 .addField(new MessageEmbed.Field("Objet", event.getValue("object").getAsString(), true));
