@@ -17,6 +17,7 @@
 
     <modules>
         <module>discord-bot</module>
+        <module>core</module>
     </modules>
 
     <properties>

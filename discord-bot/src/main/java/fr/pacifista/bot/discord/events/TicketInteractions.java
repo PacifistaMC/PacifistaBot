@@ -44,7 +44,7 @@ public class TicketInteractions extends ListenerAdapter {
                 new TicketCreateButton().onButton(event);
                 break;
             case "ticket-close":
-                new TicketCloseButton(this.pacifistaBot).onButton(event);
+                new TicketCloseButton(this.pacifistaBot, this.ticketClient).onButton(event);
                 break;
         }
     }
