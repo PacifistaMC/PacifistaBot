@@ -6,68 +6,24 @@ import fr.pacifista.api.support.tickets.client.enums.TicketCreationSource;
 import fr.pacifista.api.support.tickets.client.enums.TicketStatus;
 import fr.pacifista.api.support.tickets.client.enums.TicketType;
 import fr.pacifista.bot.discord.PacifistaBot;
-import fr.pacifista.bot.discord.events.buttons.TicketCloseButton;
-import fr.pacifista.bot.discord.events.buttons.TicketCreateButton;
 import fr.pacifista.bot.discord.utils.TicketUtils;
-import lombok.NonNull;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.interactions.components.text.TextInput;
-import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
-import net.dv8tion.jda.api.interactions.modals.Modal;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
 @Service
-public class TicketInteractions extends ListenerAdapter {
+public class BotModalEvents extends ListenerAdapter {
     private final PacifistaBot pacifistaBot;
     private final PacifistaSupportTicketClient ticketClient;
 
-    public TicketInteractions(PacifistaBot pacifistaBot,
-                              PacifistaSupportTicketClient ticketClient) {
+    public BotModalEvents(PacifistaBot pacifistaBot, PacifistaSupportTicketClient ticketClient) {
         this.pacifistaBot = pacifistaBot;
         this.ticketClient = ticketClient;
         pacifistaBot.getJda().addEventListener(this);
-    }
-
-    @Override
-    public void onButtonInteraction(ButtonInteractionEvent event) {
-        final String buttonId = event.getInteraction().getComponentId();
-
-        switch (buttonId) {
-            case "ticket-create":
-                new TicketCreateButton().onButton(event);
-                break;
-            case "ticket-close":
-                new TicketCloseButton(this.pacifistaBot, this.ticketClient).onButton(event);
-                break;
-        }
-    }
-
-    @Override
-    public void onStringSelectInteraction(@NonNull StringSelectInteractionEvent event) {
-        String selectId = event.getInteraction().getComponentId();
-        String ticketType = event.getValues().get(0);
-
-        TextInput object = TextInput.create("object", "Objet", TextInputStyle.SHORT)
-                .setPlaceholder("Objet du ticket")
-                .setMinLength(10)
-                .setMaxLength(100)
-                .setRequired(true)
-                .build();
-
-        if (selectId.equals("ticket-create")) {
-            Modal modal = Modal.create(String.format("ticket-create,%s", ticketType), "Crée un ticket")
-                    .addActionRow(object)
-                    .build();
-
-            event.replyModal(modal).queue();
-        }
     }
 
     @Override

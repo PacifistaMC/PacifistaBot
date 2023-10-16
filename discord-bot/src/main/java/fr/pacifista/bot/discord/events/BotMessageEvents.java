@@ -22,12 +22,12 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class MessageInteractions extends ListenerAdapter {
+public class BotMessageEvents extends ListenerAdapter {
     private final PacifistaBot pacifistaBot;
     private final PacifistaSupportTicketClient ticketClient;
     private final PacifistaSupportTicketMessageClient ticketMessageClient;
 
-    public MessageInteractions(PacifistaBot pacifistaBot,
+    public BotMessageEvents(PacifistaBot pacifistaBot,
                                PacifistaSupportTicketClient ticketClient,
                                PacifistaSupportTicketMessageClient ticketMessageClient) {
         this.pacifistaBot = pacifistaBot;
