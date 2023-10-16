@@ -29,7 +29,12 @@
         <dependency>
             <groupId>fr.pacifista.api.support.tickets.client</groupId>
             <artifactId>pacifista-support-tickets-client</artifactId>
-            <version>1.5.1.4</version>
+            <version>${fr.pacifista.api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>fr.pacifista.bot.core</groupId>
+            <artifactId>core</artifactId>
+            <version>${fr.pacifista.bot.version}</version>
         </dependency>
 
         <dependency>
