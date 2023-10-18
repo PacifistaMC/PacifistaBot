@@ -27,8 +27,6 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-        <fr.pacifista.bot.version>2.0.0</fr.pacifista.bot.version>
     </properties>
 
 </project>
