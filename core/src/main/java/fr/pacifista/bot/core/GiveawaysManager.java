@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import fr.pacifista.bot.core.entities.giveaways.Giveaway;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -14,9 +15,10 @@ import java.util.List;
 import java.util.UUID;
 
 @Slf4j(topic = "Giveaways Manager")
+@Service
 public class GiveawaysManager {
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    private final File giveawaysFolder = new File("data\\giveaways");
+    private final File giveawaysFolder = new File("data" + File.pathSeparator + "giveaways");
 
     public GiveawaysManager() {
         try {
@@ -68,7 +70,7 @@ public class GiveawaysManager {
                 if (giveaway.getGiveawayId().equals(giveawayId)) return giveaway;
             }
         } catch (Exception e) {
-            log.error(String.format("Impossible de récupérer le giveaway. Id: %s", giveawayId), e);
+            log.error("Impossible de récupérer le giveaway. Id: {}", giveawayId, e);
         }
 
         return null;
@@ -84,11 +86,11 @@ public class GiveawaysManager {
             String giveawayFilePath = this.generateFilePath(giveawayId);
             Files.deleteIfExists(Path.of(giveawayFilePath));
         } catch(Exception e) {
-            log.error(String.format("Impossible de supprimer le giveaway. UUID: %s", giveawayId), e);
+            log.error("Impossible de supprimer le giveaway. Id: {}", giveawayId, e);
         }
     }
 
     private String generateFilePath(UUID giveawayId) {
-        return this.giveawaysFolder.getAbsolutePath() + "\\giveaway-" + giveawayId + ".json";
+        return this.giveawaysFolder.getAbsolutePath() + File.pathSeparator + "giveaway-" + giveawayId + ".json";
     }
 }
