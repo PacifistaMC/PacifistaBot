@@ -1,5 +1,6 @@
 package fr.pacifista.bot.discord.commands;
 
+import jakarta.annotation.Nullable;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
@@ -15,12 +16,12 @@ import java.util.List;
 @Slf4j(topic = "Command")
 public abstract class Command extends ListenerAdapter {
 
-    protected Command(final JDA jda) {
+    protected Command(final JDA jda, @Nullable List<SubcommandData> subcommandList) {
         CommandCreateAction cmd = jda.upsertCommand(getCommandName(), getCommandDescription())
                 .setDefaultPermissions(getCommandPermissions());
 
-        if (getSubCommands() != null) {
-            for (SubcommandData subCmd : getSubCommands()) {
+        if (subcommandList != null) {
+            for (SubcommandData subCmd : subcommandList) {
                 cmd.addSubcommands(subCmd);
             }
         }
@@ -41,7 +42,6 @@ public abstract class Command extends ListenerAdapter {
     public abstract String getCommandName();
     public abstract String getCommandDescription();
     public abstract DefaultMemberPermissions getCommandPermissions();
-    public abstract List<SubcommandData> getSubCommands();
     public abstract void onCommand(@NonNull final SlashCommandInteractionEvent interactionEvent);
 
 }

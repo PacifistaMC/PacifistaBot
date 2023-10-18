@@ -43,7 +43,7 @@ public class CommandIP extends Command {
     );
 
     public CommandIP(PacifistaBot pacifistaBot) {
-        super(pacifistaBot.getJda());
+        super(pacifistaBot.getJda(), null);
     }
 
     @Override
@@ -59,11 +59,6 @@ public class CommandIP extends Command {
     @Override
     public DefaultMemberPermissions getCommandPermissions() {
         return DefaultMemberPermissions.ENABLED;
-    }
-
-    @Override
-    public List<SubcommandData> getSubCommands() {
-        return null;
     }
 
     @Override

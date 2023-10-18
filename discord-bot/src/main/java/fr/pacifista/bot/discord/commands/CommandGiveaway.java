@@ -1,5 +1,6 @@
 package fr.pacifista.bot.discord.commands;
 
+import fr.pacifista.bot.core.GiveawaysManager;
 import fr.pacifista.bot.core.entities.giveaways.Giveaway;
 import fr.pacifista.bot.discord.PacifistaBot;
 import lombok.NonNull;
@@ -13,16 +14,19 @@ import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
 import net.dv8tion.jda.api.interactions.modals.Modal;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class CommandGiveaway extends Command {
-    private final PacifistaBot pacifistaBot;
+    private final GiveawaysManager giveawaysManager;
+    private static final List<SubcommandData> SUBCOMMANDS = List.of(
+            new SubcommandData("start", "Commencer un giveaway !"),
+            new SubcommandData("roll", "Choisir les gagnants du giveaway !")
+    );
 
-    protected CommandGiveaway(PacifistaBot pacifistaBot) {
-        super(pacifistaBot.getJda());
-        this.pacifistaBot = pacifistaBot;
+    protected CommandGiveaway(PacifistaBot pacifistaBot, GiveawaysManager giveawaysManager) {
+        super(pacifistaBot.getJda(), SUBCOMMANDS);
+        this.giveawaysManager = giveawaysManager;
     }
 
     @Override
@@ -41,14 +45,6 @@ public class CommandGiveaway extends Command {
     }
 
     @Override
-    public List<SubcommandData> getSubCommands() {
-        List<SubcommandData> list = new ArrayList<>();
-        list.add(new SubcommandData("start", "Commencer un giveaway !"));
-        list.add(new SubcommandData("roll", "Choisir les gagnants du giveaway !"));
-        return list;
-    }
-
-    @Override
     public void onCommand(@NonNull SlashCommandInteractionEvent interactionEvent) {
         switch (interactionEvent.getSubcommandName()) {
             case "start":
@@ -62,7 +58,7 @@ public class CommandGiveaway extends Command {
 
     private void startGiveaway(@NonNull SlashCommandInteractionEvent interactionEvent) {
         TextInput prize = TextInput.create("giveaway-prize", "Récompense du giveaway", TextInputStyle.SHORT)
-                .setPlaceholder("1 Pacifista+")
+                .setPlaceholder("Exemple: 1 mois de Pacifista+")
                 .setMinLength(1)
                 .setMaxLength(50)
                 .setRequired(true)
@@ -72,7 +68,7 @@ public class CommandGiveaway extends Command {
                     "giveaway-pacifista-command",
                     "Commande à envoyer au serveur",
                     TextInputStyle.SHORT)
-                .setMinLength(3)
+                .setMinLength(1)
                 .setMaxLength(100)
                 .setRequired(true)
                 .build();
@@ -94,7 +90,7 @@ public class CommandGiveaway extends Command {
     }
 
     private void rollGiveaway(@NonNull SlashCommandInteractionEvent interactionEvent) {
-        List<Giveaway> giveawayList = this.pacifistaBot.getGiveawaysManager().getGiveaways();
+        List<Giveaway> giveawayList = this.giveawaysManager.getGiveaways();
         if (giveawayList.isEmpty()) {
             interactionEvent.reply("Aucun giveaway n'est actuellement en cours.")
                     .setEphemeral(true)

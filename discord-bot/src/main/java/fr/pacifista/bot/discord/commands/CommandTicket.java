@@ -15,15 +15,18 @@ import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class CommandTicket extends Command {
     private final PacifistaBot pacifistaBot;
+    private static final List<SubcommandData> SUBCOMMANDS = List.of(
+            new SubcommandData("close", "Fermer un ticket !"),
+            new SubcommandData("sendmessage", "Envoyer le messager permettant de créer son ticket !")
+    );
 
     public CommandTicket(PacifistaBot pacifistaBot) {
-        super(pacifistaBot.getJda());
+        super(pacifistaBot.getJda(), SUBCOMMANDS);
         this.pacifistaBot = pacifistaBot;
     }
 
@@ -40,14 +43,6 @@ public class CommandTicket extends Command {
     @Override
     public DefaultMemberPermissions getCommandPermissions() {
         return DefaultMemberPermissions.enabledFor(Permission.MANAGE_CHANNEL);
-    }
-
-    @Override
-    public List<SubcommandData> getSubCommands() {
-        List<SubcommandData> list = new ArrayList<>();
-        list.add(new SubcommandData("close", "Fermer un ticket !"));
-        list.add(new SubcommandData("sendmessage", "Envoyer le messager permettant de créer son ticket !"));
-        return list;
     }
 
     @Override
