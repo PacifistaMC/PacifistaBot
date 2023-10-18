@@ -1,6 +1,5 @@
 package fr.pacifista.bot.discord;
 
-import fr.pacifista.bot.core.GiveawaysManager;
 import fr.pacifista.bot.discord.config.BotConfig;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +13,6 @@ import org.springframework.context.annotation.Configuration;
 public class PacifistaBot {
     private final JDA jda;
     private final BotConfig botConfig;
-    private final GiveawaysManager giveawaysManager = new GiveawaysManager();
 
     public PacifistaBot(BotConfig botConfig, JDA jda) {
         try {

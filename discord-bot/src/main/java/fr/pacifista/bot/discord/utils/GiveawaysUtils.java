@@ -1,5 +1,6 @@
 package fr.pacifista.bot.discord.utils;
 
+import fr.pacifista.bot.core.GiveawaysManager;
 import fr.pacifista.bot.core.entities.giveaways.Giveaway;
 import fr.pacifista.bot.core.entities.giveaways.enums.GiveawayType;
 import fr.pacifista.bot.discord.PacifistaBot;
@@ -20,14 +21,16 @@ import java.util.stream.Collectors;
 @Slf4j(topic = "Giveaways Utils")
 public class GiveawaysUtils {
     private final PacifistaBot pacifistaBot;
+    private final GiveawaysManager giveawaysManager;
 
-    public GiveawaysUtils(PacifistaBot pacifistaBot) {
+    public GiveawaysUtils(PacifistaBot pacifistaBot, GiveawaysManager giveawaysManager) {
         this.pacifistaBot = pacifistaBot;
+        this.giveawaysManager = giveawaysManager;
     }
 
     public void createGiveawayFromModal(ModalInteractionEvent event) {
         String giveawaysChannelId = this.pacifistaBot.getBotConfig().getGiveawaysChannelId();
-        TextChannel channel = this.pacifistaBot.getJda().getTextChannelById(giveawaysChannelId);
+        TextChannel channel = event.getJDA().getTextChannelById(giveawaysChannelId);
 
         if (channel == null || channel.getType() != ChannelType.TEXT) {
             log.error("Impossible de récupérer le salon des giveaways.");
@@ -57,13 +60,12 @@ public class GiveawaysUtils {
         message.addReaction(Emoji.fromUnicode("🎁")).queue();
 
         giveaway.setDiscordMessageId(message.getId());
-        this.pacifistaBot.getGiveawaysManager().createGiveaway(giveaway);
+        this.giveawaysManager.createGiveaway(giveaway);
 
         event.reply("Succès !").setEphemeral(true).queue();
     }
 
     public void rollGiveaway(@NonNull StringSelectInteractionEvent event) {
-        GiveawaysUtils giveawaysUtils = new GiveawaysUtils(this.pacifistaBot);
         String giveawaysChannelId = this.pacifistaBot.getBotConfig().getGiveawaysChannelId();
         TextChannel giveawaysChannel = event.getJDA().getTextChannelById(giveawaysChannelId);
 
@@ -73,7 +75,7 @@ public class GiveawaysUtils {
         }
 
         UUID giveawayId = UUID.fromString(event.getValues().getFirst());
-        Giveaway giveaway = this.pacifistaBot.getGiveawaysManager().getGiveawayById(giveawayId);
+        Giveaway giveaway = this.giveawaysManager.getGiveawayById(giveawayId);
         List<String> participantsIds = giveaway.getParticipantsIds();
 
         if (giveaway.getWinners() > participantsIds.size()) {
@@ -83,7 +85,7 @@ public class GiveawaysUtils {
             return;
         }
 
-        List<String> winnersIds = giveawaysUtils.rollWinners(giveaway);
+        List<String> winnersIds = this.rollWinners(giveaway);
         List<String> winnerTags = winnersIds.stream()
                 .map(id -> "<@" + id + ">")
                 .collect(Collectors.toList());
@@ -106,7 +108,7 @@ public class GiveawaysUtils {
                 .setFooter("Pacifista - Giveaway", event.getJDA().getSelfUser().getAvatarUrl())
                 .build();
 
-        this.pacifistaBot.getGiveawaysManager().deleteGiveaway(giveawayId);
+        this.giveawaysManager.deleteGiveaway(giveawayId);
 
         Message giveawayMessage = giveawaysChannel.retrieveMessageById(giveaway.getDiscordMessageId()).complete();
         giveawayMessage

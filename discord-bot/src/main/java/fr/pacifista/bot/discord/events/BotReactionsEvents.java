@@ -17,8 +17,8 @@ import java.util.List;
 public class BotReactionsEvents extends ListenerAdapter {
     private final GiveawaysManager giveawaysManager;
 
-    public BotReactionsEvents(PacifistaBot pacifistaBot) {
-        this.giveawaysManager = pacifistaBot.getGiveawaysManager();
+    public BotReactionsEvents(PacifistaBot pacifistaBot, GiveawaysManager giveawaysManager) {
+        this.giveawaysManager = giveawaysManager;
         pacifistaBot.getJda().addEventListener(this);
     }
 

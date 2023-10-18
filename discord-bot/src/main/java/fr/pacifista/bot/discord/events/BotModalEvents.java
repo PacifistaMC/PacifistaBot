@@ -5,6 +5,7 @@ import fr.pacifista.api.support.tickets.client.dtos.PacifistaSupportTicketDTO;
 import fr.pacifista.api.support.tickets.client.enums.TicketCreationSource;
 import fr.pacifista.api.support.tickets.client.enums.TicketStatus;
 import fr.pacifista.api.support.tickets.client.enums.TicketType;
+import fr.pacifista.bot.core.GiveawaysManager;
 import fr.pacifista.bot.discord.PacifistaBot;
 import fr.pacifista.bot.discord.utils.GiveawaysUtils;
 import fr.pacifista.bot.discord.utils.TicketUtils;
@@ -20,10 +21,12 @@ import java.util.Date;
 public class BotModalEvents extends ListenerAdapter {
     private final PacifistaBot pacifistaBot;
     private final PacifistaSupportTicketClient ticketClient;
+    private final GiveawaysManager giveawaysManager;
 
-    public BotModalEvents(PacifistaBot pacifistaBot, PacifistaSupportTicketClient ticketClient) {
+    public BotModalEvents(PacifistaBot pacifistaBot, PacifistaSupportTicketClient ticketClient, GiveawaysManager giveawaysManager) {
         this.pacifistaBot = pacifistaBot;
         this.ticketClient = ticketClient;
+        this.giveawaysManager = giveawaysManager;
         pacifistaBot.getJda().addEventListener(this);
     }
 
@@ -54,7 +57,7 @@ public class BotModalEvents extends ListenerAdapter {
             ticketUtils.createTicket(event, ticketType);
             this.ticketClient.create(ticketDTO);
         } else if (modalId.equals("giveaway-create")) {
-            new GiveawaysUtils(this.pacifistaBot).createGiveawayFromModal(event);
+            new GiveawaysUtils(this.pacifistaBot, this.giveawaysManager).createGiveawayFromModal(event);
         }
     }
 }
