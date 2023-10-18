@@ -1,6 +1,7 @@
 package fr.pacifista.bot.discord.events;
 
 import fr.pacifista.bot.discord.PacifistaBot;
+import fr.pacifista.bot.discord.utils.GiveawaysUtils;
 import lombok.NonNull;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -11,7 +12,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class BotSelectEvents extends ListenerAdapter {
+    private final PacifistaBot pacifistaBot;
+
     public BotSelectEvents(PacifistaBot pacifistaBot) {
+        this.pacifistaBot = pacifistaBot;
         pacifistaBot.getJda().addEventListener(this);
     }
 
@@ -34,6 +38,8 @@ public class BotSelectEvents extends ListenerAdapter {
                     .build();
 
             event.replyModal(modal).queue();
+        } else if (selectId.equals("giveaway-roll")) {
+            new GiveawaysUtils(this.pacifistaBot).rollGiveaway(event);
         }
     }
 }

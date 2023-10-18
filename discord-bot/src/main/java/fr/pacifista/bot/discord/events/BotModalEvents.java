@@ -6,6 +6,7 @@ import fr.pacifista.api.support.tickets.client.enums.TicketCreationSource;
 import fr.pacifista.api.support.tickets.client.enums.TicketStatus;
 import fr.pacifista.api.support.tickets.client.enums.TicketType;
 import fr.pacifista.bot.discord.PacifistaBot;
+import fr.pacifista.bot.discord.utils.GiveawaysUtils;
 import fr.pacifista.bot.discord.utils.TicketUtils;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
@@ -31,11 +32,13 @@ public class BotModalEvents extends ListenerAdapter {
         TicketUtils ticketUtils = new TicketUtils(this.pacifistaBot);
         String interactionId = event.getModalId();
         String modalId = interactionId.split(",")[0];
-        String arg = interactionId.split(",")[1];
+        String arg = null;
+        if (interactionId.contains(",")) arg = interactionId.split(",")[1];
 
         User user = event.getUser();
 
         if (modalId.equals("ticket-create")) {
+            if (arg == null) return;
             TicketType ticketType = TicketType.valueOf(arg.toUpperCase());
             String object = event.getValue("object").getAsString();
 
@@ -50,6 +53,8 @@ public class BotModalEvents extends ListenerAdapter {
 
             ticketUtils.createTicket(event, ticketType);
             this.ticketClient.create(ticketDTO);
+        } else if (modalId.equals("giveaway-create")) {
+            new GiveawaysUtils(this.pacifistaBot).createGiveawayFromModal(event);
         }
     }
 }
