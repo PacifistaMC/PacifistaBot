@@ -44,9 +44,12 @@ public class GiveawaysManager {
 
     public List<Giveaway> getGiveaways() {
         List<Giveaway> giveawayList = new ArrayList<>();
+        File[] files = this.giveawaysFolder.listFiles();
+
+        if (files == null) return giveawayList;
 
         try {
-            for (File file : this.giveawaysFolder.listFiles()) {
+            for (File file : files) {
                 String jsonGiveaway = Files.readString(file.toPath());
                 Giveaway giveaway = this.gson.fromJson(jsonGiveaway, Giveaway.class);
                 giveawayList.add(giveaway);
