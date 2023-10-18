@@ -18,7 +18,7 @@ import java.util.UUID;
 @Service
 public class GiveawaysManager {
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    private final File giveawaysFolder = new File("data" + File.pathSeparator + "giveaways");
+    private final File giveawaysFolder = new File("data" + File.separator + "giveaways");
 
     public GiveawaysManager() {
         try {
@@ -91,6 +91,6 @@ public class GiveawaysManager {
     }
 
     private String generateFilePath(UUID giveawayId) {
-        return this.giveawaysFolder.getAbsolutePath() + File.pathSeparator + "giveaway-" + giveawayId + ".json";
+        return this.giveawaysFolder.getAbsolutePath() + File.separator + "giveaway-" + giveawayId + ".json";
     }
 }
