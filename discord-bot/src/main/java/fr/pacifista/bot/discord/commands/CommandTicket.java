@@ -20,13 +20,12 @@ import java.util.List;
 @Service
 public class CommandTicket extends Command {
     private final PacifistaBot pacifistaBot;
-    private static final List<SubcommandData> SUBCOMMANDS = List.of(
-            new SubcommandData("close", "Fermer un ticket !"),
-            new SubcommandData("sendmessage", "Envoyer le messager permettant de créer son ticket !")
-    );
 
     public CommandTicket(PacifistaBot pacifistaBot) {
-        super(pacifistaBot.getJda(), SUBCOMMANDS);
+        super(pacifistaBot.getJda(), List.of(
+                new SubcommandData("close", "Fermer un ticket !"),
+                new SubcommandData("sendmessage", "Envoyer le messager permettant de créer son ticket !")
+        ));
         this.pacifistaBot = pacifistaBot;
     }
 

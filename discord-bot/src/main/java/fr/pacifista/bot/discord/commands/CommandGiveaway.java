@@ -19,13 +19,12 @@ import java.util.List;
 @Service
 public class CommandGiveaway extends Command {
     private final GiveawaysManager giveawaysManager;
-    private static final List<SubcommandData> SUBCOMMANDS = List.of(
-            new SubcommandData("start", "Commencer un giveaway !"),
-            new SubcommandData("roll", "Choisir les gagnants du giveaway !")
-    );
 
     protected CommandGiveaway(PacifistaBot pacifistaBot, GiveawaysManager giveawaysManager) {
-        super(pacifistaBot.getJda(), SUBCOMMANDS);
+        super(pacifistaBot.getJda(), List.of(
+                new SubcommandData("start", "Commencer un giveaway !"),
+                new SubcommandData("roll", "Choisir les gagnants du giveaway !")
+        ));
         this.giveawaysManager = giveawaysManager;
     }
 
