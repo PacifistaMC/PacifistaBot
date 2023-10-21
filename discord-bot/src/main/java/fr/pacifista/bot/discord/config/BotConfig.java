@@ -26,8 +26,10 @@ public class BotConfig {
     private String ticketsChannelId;
     private String ticketsCategoryId;
     private String ticketsLogsCategoryId;
+    private String giveawaysChannelId;
 
     private String ticketsModRoleID;
+    private String giveawaysRoleId;
 
     private String pacifistaApiToken;
 

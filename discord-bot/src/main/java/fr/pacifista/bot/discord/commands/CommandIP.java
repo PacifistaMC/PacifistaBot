@@ -42,7 +42,7 @@ public class CommandIP extends Command {
     );
 
     public CommandIP(PacifistaBot pacifistaBot) {
-        super(pacifistaBot.getJda());
+        super(pacifistaBot.getJda(), null);
     }
 
     @Override
