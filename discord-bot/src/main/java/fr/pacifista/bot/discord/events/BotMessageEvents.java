@@ -54,7 +54,7 @@ public class BotMessageEvents extends ListenerAdapter {
                     "1",
                     String.format("createdById:like:%s", ticketOwnerId),
                     ""
-                    ).getContent().getFirst();
+                    ).getContent().get(0);
 
             if (    !ticketDTO.getStatus().equals(TicketStatus.IN_PROGRESS) &&
                     isTicketsMod(member) &&

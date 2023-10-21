@@ -34,7 +34,7 @@ public class TicketCloseButton extends Button {
         Channel channel = event.getChannel();
         Member member = event.getMember();
         String ticketOwnerUsername = channel.getName().split("-")[1];
-        Member ticketOwner = event.getGuild().getMembersByName(ticketOwnerUsername, true).getFirst();
+        Member ticketOwner = event.getGuild().getMembersByName(ticketOwnerUsername, true).get(0);
 
         if (channel.getType() != ChannelType.TEXT || !channel.getName().contains("ticket-")) {
             event.reply(":warning: Ce salon n'est pas un ticket !").queue();
@@ -68,7 +68,7 @@ public class TicketCloseButton extends Button {
                 "0",
                 "1",
                 String.format("createdById:like:%s", ticketOwnerId),
-                "").getContent().getFirst();
+                "").getContent().get(0);
 
         ticketDTO.setStatus(TicketStatus.SOLVED);
         ticketDTO.setUpdatedAt(updatedAt);

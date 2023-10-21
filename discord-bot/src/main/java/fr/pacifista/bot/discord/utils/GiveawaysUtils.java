@@ -74,7 +74,7 @@ public class GiveawaysUtils {
             return;
         }
 
-        UUID giveawayId = UUID.fromString(event.getValues().getFirst());
+        UUID giveawayId = UUID.fromString(event.getValues().get(0));
         Giveaway giveaway = this.giveawaysManager.getGiveawayById(giveawayId);
         List<String> participantsIds = giveaway.getParticipantsIds();
 
