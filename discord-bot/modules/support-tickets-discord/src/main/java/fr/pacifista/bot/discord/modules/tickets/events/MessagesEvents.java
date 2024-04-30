@@ -1,11 +1,11 @@
-package fr.pacifista.bot.discord.modules.core.events;
+package fr.pacifista.bot.discord.modules.tickets.events;
 
 import fr.pacifista.api.support.tickets.client.clients.PacifistaSupportTicketClient;
 import fr.pacifista.api.support.tickets.client.clients.PacifistaSupportTicketMessageClient;
 import fr.pacifista.api.support.tickets.client.dtos.PacifistaSupportTicketDTO;
 import fr.pacifista.api.support.tickets.client.dtos.PacifistaSupportTicketMessageDTO;
 import fr.pacifista.api.support.tickets.client.enums.TicketStatus;
-import fr.pacifista.bot.discord.modules.core.config.BotConfig;
+import fr.pacifista.bot.discord.modules.tickets.config.BotTicketConfig;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -23,14 +23,14 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class BotMessageEvents extends ListenerAdapter {
+public class MessagesEvents extends ListenerAdapter {
 
-    private final PacifistaSupportTicketClient ticketClient;
     private final PacifistaSupportTicketMessageClient ticketMessageClient;
-    private final BotConfig botConfig;
+    private final PacifistaSupportTicketClient ticketClient;
+    private final BotTicketConfig botConfig;
 
-    public BotMessageEvents(JDA jda,
-                            BotConfig botConfig,
+    public MessagesEvents(JDA jda,
+                            BotTicketConfig botConfig,
                             PacifistaSupportTicketClient ticketClient,
                             PacifistaSupportTicketMessageClient ticketMessageClient) {
         this.ticketClient = ticketClient;
@@ -57,7 +57,7 @@ public class BotMessageEvents extends ListenerAdapter {
                     "1",
                     String.format("createdById:like:%s", ticketOwnerId),
                     ""
-                    ).getContent().get(0);
+            ).getContent().get(0);
 
             if (    !ticketDTO.getStatus().equals(TicketStatus.IN_PROGRESS) &&
                     isTicketsMod(member) &&
@@ -94,4 +94,5 @@ public class BotMessageEvents extends ListenerAdapter {
         final Role ticketModRole = member.getJDA().getRoleById(ticketModRoleId);
         return member.getRoles().contains(ticketModRole);
     }
+
 }

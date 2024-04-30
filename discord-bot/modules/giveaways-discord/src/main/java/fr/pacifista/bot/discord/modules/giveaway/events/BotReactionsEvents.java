@@ -1,4 +1,4 @@
-package fr.pacifista.bot.discord.modules.core.events;
+package fr.pacifista.bot.discord.modules.giveaway.events;
 
 import fr.pacifista.bot.core.GiveawaysManager;
 import fr.pacifista.bot.core.entities.giveaways.Giveaway;

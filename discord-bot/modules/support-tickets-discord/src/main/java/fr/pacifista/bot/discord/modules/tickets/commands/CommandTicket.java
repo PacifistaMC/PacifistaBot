@@ -1,9 +1,10 @@
 package fr.pacifista.bot.discord.modules.tickets.commands;
 
 import fr.pacifista.bot.discord.modules.core.commands.BotCommand;
-import fr.pacifista.bot.discord.modules.core.config.BotConfig;
 import fr.pacifista.bot.discord.modules.core.utils.Colors;
+import fr.pacifista.bot.discord.modules.tickets.config.BotTicketConfig;
 import fr.pacifista.bot.discord.modules.tickets.events.TicketCloseButton;
+import fr.pacifista.bot.discord.modules.tickets.events.TicketCreateButton;
 import lombok.NonNull;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
@@ -14,25 +15,27 @@ import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
-import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class CommandTicket extends BotCommand {
-    private final BotConfig botConfig;
+    private final BotTicketConfig botConfig;
     private final TicketCloseButton ticketCloseButton;
+    private final TicketCreateButton ticketCreateButton;
 
     public CommandTicket(JDA jda,
-                         BotConfig botConfig,
-                         TicketCloseButton ticketCloseButton) {
+                         BotTicketConfig botConfig,
+                         TicketCloseButton ticketCloseButton,
+                         TicketCreateButton ticketCreateButton) {
         super(jda, List.of(
                 new SubcommandData("close", "Fermer un ticket !"),
                 new SubcommandData("sendmessage", "Envoyer le messager permettant de créer son ticket !")
         ));
         this.botConfig = botConfig;
         this.ticketCloseButton = ticketCloseButton;
+        this.ticketCreateButton = ticketCreateButton;
     }
 
     @Override
@@ -90,9 +93,7 @@ public class CommandTicket extends BotCommand {
                 .setTitle("🎫 Tickets")
                 .setDescription("Besoin de nous contacter ? Clique sur le bouton ci-dessous pour créer un ticket !");
 
-        Button button = Button.primary("ticket-create", "Créer un ticket");
-
-        channel.sendMessageEmbeds(embed.build()).addActionRow(button).queue();
+        channel.sendMessageEmbeds(embed.build()).addActionRow(this.ticketCreateButton.createButton()).queue();
         interactionEvent.reply("Message envoyé !").setEphemeral(true).queue();
     }
 }
