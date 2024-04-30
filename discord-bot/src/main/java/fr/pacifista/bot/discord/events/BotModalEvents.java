@@ -6,9 +6,10 @@ import fr.pacifista.api.support.tickets.client.enums.TicketCreationSource;
 import fr.pacifista.api.support.tickets.client.enums.TicketStatus;
 import fr.pacifista.api.support.tickets.client.enums.TicketType;
 import fr.pacifista.bot.core.GiveawaysManager;
-import fr.pacifista.bot.discord.PacifistaBot;
+import fr.pacifista.bot.discord.config.BotConfig;
 import fr.pacifista.bot.discord.utils.GiveawaysUtils;
 import fr.pacifista.bot.discord.utils.TicketUtils;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -19,20 +20,27 @@ import java.util.Date;
 
 @Service
 public class BotModalEvents extends ListenerAdapter {
-    private final PacifistaBot pacifistaBot;
     private final PacifistaSupportTicketClient ticketClient;
     private final GiveawaysManager giveawaysManager;
+    private final BotConfig botConfig;
+    private final TicketUtils ticketUtils;
+    private final JDA jda;
 
-    public BotModalEvents(PacifistaBot pacifistaBot, PacifistaSupportTicketClient ticketClient, GiveawaysManager giveawaysManager) {
-        this.pacifistaBot = pacifistaBot;
+    public BotModalEvents(JDA jda,
+                          BotConfig botConfig,
+                          TicketUtils ticketUtils,
+                          PacifistaSupportTicketClient ticketClient,
+                          GiveawaysManager giveawaysManager) {
+        this.jda = jda;
         this.ticketClient = ticketClient;
+        this.ticketUtils = ticketUtils;
         this.giveawaysManager = giveawaysManager;
-        pacifistaBot.getJda().addEventListener(this);
+        this.botConfig = botConfig;
+        jda.addEventListener(this);
     }
 
     @Override
     public void onModalInteraction(@NotNull ModalInteractionEvent event) {
-        TicketUtils ticketUtils = new TicketUtils(this.pacifistaBot);
         String interactionId = event.getModalId();
         String modalId = interactionId.split(",")[0];
         String arg = null;
@@ -57,7 +65,7 @@ public class BotModalEvents extends ListenerAdapter {
             ticketUtils.createTicket(event, ticketType);
             this.ticketClient.create(ticketDTO);
         } else if (modalId.equals("giveaway-create")) {
-            new GiveawaysUtils(this.pacifistaBot, this.giveawaysManager).createGiveawayFromModal(event);
+            new GiveawaysUtils(this.jda, this.botConfig, this.giveawaysManager).createGiveawayFromModal(event);
         }
     }
 }

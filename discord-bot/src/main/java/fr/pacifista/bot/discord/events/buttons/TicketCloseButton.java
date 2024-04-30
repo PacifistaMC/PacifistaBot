@@ -3,7 +3,7 @@ package fr.pacifista.bot.discord.events.buttons;
 import fr.pacifista.api.support.tickets.client.clients.PacifistaSupportTicketClient;
 import fr.pacifista.api.support.tickets.client.dtos.PacifistaSupportTicketDTO;
 import fr.pacifista.api.support.tickets.client.enums.TicketStatus;
-import fr.pacifista.bot.discord.PacifistaBot;
+import fr.pacifista.bot.discord.config.BotConfig;
 import fr.pacifista.bot.discord.utils.Colors;
 import lombok.NonNull;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -18,19 +18,19 @@ import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class TicketCloseButton extends Button {
-    private final PacifistaBot pacifistaBot;
+public class TicketCloseButton implements Button {
     private final PacifistaSupportTicketClient ticketClient;
+    private final BotConfig botConfig;
 
-    public TicketCloseButton(PacifistaBot pacifistaBot,
+    public TicketCloseButton(BotConfig botConfig,
                              PacifistaSupportTicketClient ticketClient) {
-        this.pacifistaBot = pacifistaBot;
         this.ticketClient = ticketClient;
+        this.botConfig = botConfig;
     }
 
     @Override
     public void onButton(@NonNull ButtonInteractionEvent event) {
-        Role ticketModRole = event.getJDA().getRoleById(this.pacifistaBot.getBotConfig().getTicketsModRoleID());
+        Role ticketModRole = event.getJDA().getRoleById(botConfig.getTicketsModRoleID());
         Channel channel = event.getChannel();
         Member member = event.getMember();
         String ticketOwnerUsername = channel.getName().split("-")[1];
@@ -41,7 +41,7 @@ public class TicketCloseButton extends Button {
         }
 
         TextChannel ticketChannel = (TextChannel) channel;
-        Category ticketsLogsCategory = event.getJDA().getCategoryById(this.pacifistaBot.getBotConfig().getTicketsLogsCategoryId());
+        Category ticketsLogsCategory = event.getJDA().getCategoryById(botConfig.getTicketsLogsCategoryId());
 
         if (!member.getRoles().contains(ticketModRole)) {
             ticketChannel.getManager().removePermissionOverride(event.getMember().getIdLong()).queue();

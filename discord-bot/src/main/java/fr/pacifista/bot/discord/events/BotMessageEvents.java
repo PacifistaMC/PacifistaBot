@@ -5,7 +5,8 @@ import fr.pacifista.api.support.tickets.client.clients.PacifistaSupportTicketMes
 import fr.pacifista.api.support.tickets.client.dtos.PacifistaSupportTicketDTO;
 import fr.pacifista.api.support.tickets.client.dtos.PacifistaSupportTicketMessageDTO;
 import fr.pacifista.api.support.tickets.client.enums.TicketStatus;
-import fr.pacifista.bot.discord.PacifistaBot;
+import fr.pacifista.bot.discord.config.BotConfig;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
@@ -23,17 +24,19 @@ import java.util.List;
 
 @Service
 public class BotMessageEvents extends ListenerAdapter {
-    private final PacifistaBot pacifistaBot;
+
     private final PacifistaSupportTicketClient ticketClient;
     private final PacifistaSupportTicketMessageClient ticketMessageClient;
+    private final BotConfig botConfig;
 
-    public BotMessageEvents(PacifistaBot pacifistaBot,
-                               PacifistaSupportTicketClient ticketClient,
-                               PacifistaSupportTicketMessageClient ticketMessageClient) {
-        this.pacifistaBot = pacifistaBot;
+    public BotMessageEvents(JDA jda,
+                            BotConfig botConfig,
+                            PacifistaSupportTicketClient ticketClient,
+                            PacifistaSupportTicketMessageClient ticketMessageClient) {
         this.ticketClient = ticketClient;
+        this.botConfig = botConfig;
         this.ticketMessageClient = ticketMessageClient;
-        pacifistaBot.getJda().addEventListener(this);
+        jda.addEventListener(this);
     }
 
     @Override
@@ -87,7 +90,7 @@ public class BotMessageEvents extends ListenerAdapter {
     }
 
     private boolean isTicketsMod(Member member) {
-        final String ticketModRoleId = this.pacifistaBot.getBotConfig().getTicketsModRoleID();
+        final String ticketModRoleId = this.botConfig.getTicketsModRoleID();
         final Role ticketModRole = member.getJDA().getRoleById(ticketModRoleId);
         return member.getRoles().contains(ticketModRole);
     }

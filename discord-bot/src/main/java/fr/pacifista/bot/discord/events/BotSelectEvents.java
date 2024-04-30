@@ -1,9 +1,8 @@
 package fr.pacifista.bot.discord.events;
 
-import fr.pacifista.bot.core.GiveawaysManager;
-import fr.pacifista.bot.discord.PacifistaBot;
 import fr.pacifista.bot.discord.utils.GiveawaysUtils;
 import lombok.NonNull;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.components.text.TextInput;
@@ -13,13 +12,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class BotSelectEvents extends ListenerAdapter {
-    private final PacifistaBot pacifistaBot;
-    private final GiveawaysManager giveawaysManager;
+    private final GiveawaysUtils giveawaysUtils;
 
-    public BotSelectEvents(PacifistaBot pacifistaBot, GiveawaysManager giveawaysManager) {
-        this.pacifistaBot = pacifistaBot;
-        this.giveawaysManager = giveawaysManager;
-        pacifistaBot.getJda().addEventListener(this);
+    public BotSelectEvents(JDA jda, GiveawaysUtils giveawaysUtils) {
+        this.giveawaysUtils = giveawaysUtils;
+        jda.addEventListener(this);
     }
 
     @Override
@@ -42,7 +39,7 @@ public class BotSelectEvents extends ListenerAdapter {
 
             event.replyModal(modal).queue();
         } else if (selectId.equals("giveaway-roll")) {
-            new GiveawaysUtils(this.pacifistaBot, giveawaysManager).rollGiveaway(event);
+            this.giveawaysUtils.rollGiveaway(event);
         }
     }
 }

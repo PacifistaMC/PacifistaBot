@@ -3,10 +3,11 @@ package fr.pacifista.bot.discord.utils;
 import fr.pacifista.bot.core.GiveawaysManager;
 import fr.pacifista.bot.core.entities.giveaways.Giveaway;
 import fr.pacifista.bot.core.entities.giveaways.enums.GiveawayType;
-import fr.pacifista.bot.discord.PacifistaBot;
+import fr.pacifista.bot.discord.config.BotConfig;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
@@ -14,22 +15,27 @@ import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Service
 @Slf4j(topic = "Giveaways Utils")
 public class GiveawaysUtils {
-    private final PacifistaBot pacifistaBot;
     private final GiveawaysManager giveawaysManager;
+    private final BotConfig botConfig;
 
-    public GiveawaysUtils(PacifistaBot pacifistaBot, GiveawaysManager giveawaysManager) {
-        this.pacifistaBot = pacifistaBot;
+    public GiveawaysUtils(JDA jda,
+                          BotConfig botConfig,
+                          GiveawaysManager giveawaysManager) {
         this.giveawaysManager = giveawaysManager;
+        this.botConfig = botConfig;
+        jda.addEventListener(this);
     }
 
     public void createGiveawayFromModal(ModalInteractionEvent event) {
-        String giveawaysChannelId = this.pacifistaBot.getBotConfig().getGiveawaysChannelId();
+        String giveawaysChannelId = this.botConfig.getGiveawaysChannelId();
         TextChannel channel = event.getJDA().getTextChannelById(giveawaysChannelId);
 
         if (channel == null || channel.getType() != ChannelType.TEXT) {
@@ -54,7 +60,7 @@ public class GiveawaysUtils {
                 .setFooter("Pacifista - Giveaway", event.getJDA().getSelfUser().getAvatarUrl())
                 .build();
 
-        channel.sendMessage(String.format("<@&%s>", this.pacifistaBot.getBotConfig().getGiveawaysRoleId())).queue();
+        channel.sendMessage(String.format("<@&%s>",this.botConfig.getGiveawaysRoleId())).queue();
         Message message = channel.sendMessageEmbeds(embedBuilder).complete();
 
         message.addReaction(Emoji.fromUnicode("🎁")).queue();
@@ -66,7 +72,7 @@ public class GiveawaysUtils {
     }
 
     public void rollGiveaway(@NonNull StringSelectInteractionEvent event) {
-        String giveawaysChannelId = this.pacifistaBot.getBotConfig().getGiveawaysChannelId();
+        String giveawaysChannelId = this.botConfig.getGiveawaysChannelId();
         TextChannel giveawaysChannel = event.getJDA().getTextChannelById(giveawaysChannelId);
 
         if (giveawaysChannel == null || giveawaysChannel.getType() != ChannelType.TEXT) {

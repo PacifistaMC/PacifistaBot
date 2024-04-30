@@ -2,8 +2,8 @@ package fr.pacifista.bot.discord.commands;
 
 import fr.pacifista.bot.core.GiveawaysManager;
 import fr.pacifista.bot.core.entities.giveaways.Giveaway;
-import fr.pacifista.bot.discord.PacifistaBot;
 import lombok.NonNull;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
@@ -20,8 +20,8 @@ import java.util.List;
 public class CommandGiveaway extends Command {
     private final GiveawaysManager giveawaysManager;
 
-    protected CommandGiveaway(PacifistaBot pacifistaBot, GiveawaysManager giveawaysManager) {
-        super(pacifistaBot.getJda(), List.of(
+    protected CommandGiveaway(JDA jda, GiveawaysManager giveawaysManager) {
+        super(jda, List.of(
                 new SubcommandData("start", "Commencer un giveaway !"),
                 new SubcommandData("roll", "Choisir les gagnants du giveaway !")
         ));
@@ -45,6 +45,8 @@ public class CommandGiveaway extends Command {
 
     @Override
     public void onCommand(@NonNull SlashCommandInteractionEvent interactionEvent) {
+        if (interactionEvent.getSubcommandName() == null) return;
+
         switch (interactionEvent.getSubcommandName()) {
             case "start":
                 startGiveaway(interactionEvent);

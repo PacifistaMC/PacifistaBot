@@ -10,11 +10,11 @@ import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TicketCreateButton extends Button {
+public class TicketCreateButton implements Button {
     List<SelectOption> getOptions() {
         List<SelectOption> options = new ArrayList<>();
 
-        SelectOption online_purchase = SelectOption
+        SelectOption onlinePurchase = SelectOption
                 .of("Achat en ligne", "online_purchase")
                 .withDescription("Un problème avec un achat en ligne ?")
                 .withEmoji(Emoji.fromUnicode("🛒"));
@@ -39,7 +39,7 @@ public class TicketCreateButton extends Button {
                 .withDescription("Contacter l'équipe de Pacifista")
                 .withEmoji(Emoji.fromUnicode("☎️"));
 
-        options.add(online_purchase);
+        options.add(onlinePurchase);
         options.add(reclamation);
         options.add(report);
         options.add(bug);

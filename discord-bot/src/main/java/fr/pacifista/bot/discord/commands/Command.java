@@ -20,13 +20,12 @@ public abstract class Command extends ListenerAdapter {
         CommandCreateAction cmd = jda.upsertCommand(getCommandName(), getCommandDescription())
                 .setDefaultPermissions(getCommandPermissions());
 
+        cmd.queue();
         if (subcommandList != null) {
             for (SubcommandData subCmd : subcommandList) {
-                cmd.addSubcommands(subCmd);
+                cmd.addSubcommands(subCmd).queue();
             }
         }
-
-        cmd.queue();
 
         jda.addEventListener(this);
         log.info("Command {} registered", getCommandName());

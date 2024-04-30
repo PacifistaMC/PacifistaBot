@@ -7,7 +7,7 @@
     <parent>
         <groupId>fr.pacifista.api</groupId>
         <artifactId>pacifista-api</artifactId>
-        <version>1.5.1.4</version>
+        <version>1.5.2.2</version>
     </parent>
 
     <groupId>fr.pacifista.bot</groupId>
@@ -22,7 +22,7 @@
 
     <properties>
         <!-- https://github.com/DV8FromTheWorld/JDA -->
-        <discord.jda.version>5.0.0-beta.13</discord.jda.version>
+        <discord.jda.version>5.0.0-beta.23</discord.jda.version>
 
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>

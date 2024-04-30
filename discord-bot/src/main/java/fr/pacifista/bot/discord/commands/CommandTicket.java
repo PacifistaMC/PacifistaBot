@@ -1,9 +1,10 @@
 package fr.pacifista.bot.discord.commands;
 
-import fr.pacifista.bot.discord.PacifistaBot;
+import fr.pacifista.bot.discord.config.BotConfig;
 import fr.pacifista.bot.discord.utils.Colors;
 import lombok.NonNull;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
@@ -19,14 +20,14 @@ import java.util.List;
 
 @Service
 public class CommandTicket extends Command {
-    private final PacifistaBot pacifistaBot;
+    private final BotConfig botConfig;
 
-    public CommandTicket(PacifistaBot pacifistaBot) {
-        super(pacifistaBot.getJda(), List.of(
+    public CommandTicket(JDA jda, BotConfig botConfig) {
+        super(jda, List.of(
                 new SubcommandData("close", "Fermer un ticket !"),
                 new SubcommandData("sendmessage", "Envoyer le messager permettant de créer son ticket !")
         ));
-        this.pacifistaBot = pacifistaBot;
+        this.botConfig = botConfig;
     }
 
     @Override
@@ -46,6 +47,8 @@ public class CommandTicket extends Command {
 
     @Override
     public void onCommand(@NonNull SlashCommandInteractionEvent interactionEvent) {
+        if (interactionEvent.getSubcommandName() == null) return;
+
         switch (interactionEvent.getSubcommandName()) {
             case "close":
                 closeTicket(interactionEvent);
@@ -73,7 +76,12 @@ public class CommandTicket extends Command {
     }
 
     private void sendTicketMessage(@NonNull SlashCommandInteractionEvent interactionEvent) {
-        TextChannel channel = interactionEvent.getGuild().getTextChannelById(this.pacifistaBot.getBotConfig().getTicketsChannelId());
+        if (interactionEvent.getGuild() == null) return;
+        final TextChannel channel = interactionEvent.getGuild().getTextChannelById(botConfig.getTicketsChannelId());
+        if (channel == null) {
+            interactionEvent.reply(":warning: Impossible de récupérer le salon des tickets.").setEphemeral(true).queue();
+            return;
+        }
 
         EmbedBuilder embed = new EmbedBuilder()
                 .setColor(Colors.PACIFISTA_COLOR)

@@ -3,7 +3,7 @@ package fr.pacifista.bot.discord.events;
 import fr.pacifista.bot.core.GiveawaysManager;
 import fr.pacifista.bot.core.entities.giveaways.Giveaway;
 import fr.pacifista.bot.core.entities.giveaways.enums.GiveawayType;
-import fr.pacifista.bot.discord.PacifistaBot;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEvent;
@@ -17,9 +17,9 @@ import java.util.List;
 public class BotReactionsEvents extends ListenerAdapter {
     private final GiveawaysManager giveawaysManager;
 
-    public BotReactionsEvents(PacifistaBot pacifistaBot, GiveawaysManager giveawaysManager) {
+    public BotReactionsEvents(JDA jda, GiveawaysManager giveawaysManager) {
         this.giveawaysManager = giveawaysManager;
-        pacifistaBot.getJda().addEventListener(this);
+        jda.addEventListener(this);
     }
 
     @Override
