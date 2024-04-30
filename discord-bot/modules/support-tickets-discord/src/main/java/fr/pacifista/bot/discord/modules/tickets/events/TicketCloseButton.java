@@ -44,7 +44,7 @@ public class TicketCloseButton extends ButtonEvent {
 
     @Override
     public void onButtonEvent(@NotNull ButtonInteractionEvent event) {
-        Role ticketModRole = event.getJDA().getRoleById(botConfig.getTicketsModRoleID());
+        Role ticketModRole = event.getJDA().getRoleById(botConfig.getTicketsModRoleId());
         Channel channel = event.getChannel();
         Member member = event.getMember();
         String ticketOwnerUsername = channel.getName().split("-")[1];

@@ -1,8 +1,8 @@
 package fr.pacifista.bot.discord.modules.giveaway.events;
 
-import fr.pacifista.bot.core.GiveawaysManager;
-import fr.pacifista.bot.core.entities.giveaways.Giveaway;
-import fr.pacifista.bot.core.entities.giveaways.enums.GiveawayType;
+import fr.pacifista.bot.core.giveaways.GiveawaysManager;
+import fr.pacifista.bot.core.giveaways.entities.Giveaway;
+import fr.pacifista.bot.core.giveaways.enums.GiveawayType;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;

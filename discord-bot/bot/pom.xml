@@ -30,6 +30,12 @@
             <artifactId>giveaways-discord</artifactId>
             <version>${fr.pacifista.bot.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>fr.pacifista.bot.discord.modules.support-tickets</groupId>
+            <artifactId>support-tickets-discord</artifactId>
+            <version>${fr.pacifista.bot.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

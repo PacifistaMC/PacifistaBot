@@ -106,8 +106,6 @@ public class TicketCreateButton extends ButtonEvent {
                     .build();
 
             event.replyModal(modal).queue();
-        } else if (selectId.equals("giveaway-roll")) {
-            this.giveawaysUtils.rollGiveaway(event);
         }
     }
 
@@ -136,8 +134,6 @@ public class TicketCreateButton extends ButtonEvent {
 
             createTicket(event, ticketType);
             this.ticketClient.create(ticketDTO);
-        } else if (modalId.equals("giveaway-create")) {
-            new GiveawaysUtils(this.jda, this.botConfig, this.giveawaysManager).createGiveawayFromModal(event);
         }
     }
 
@@ -153,7 +149,7 @@ public class TicketCreateButton extends ButtonEvent {
                 .setTopic(ticketOwner.getId())
                 .complete();
 
-        Role modRole = event.getJDA().getRoleById(botConfig.getTicketsModRoleID());
+        Role modRole = event.getJDA().getRoleById(botConfig.getTicketsModRoleId());
         Role everyoneRole = event.getGuild().getRolesByName("@everyone", true).get(0);
 
         ticketChannel.getManager()

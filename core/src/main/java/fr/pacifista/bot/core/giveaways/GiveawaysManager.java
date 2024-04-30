@@ -1,12 +1,13 @@
-package fr.pacifista.bot.core;
+package fr.pacifista.bot.core.giveaways;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import fr.pacifista.bot.core.entities.giveaways.Giveaway;
+import fr.pacifista.bot.core.giveaways.entities.Giveaway;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;

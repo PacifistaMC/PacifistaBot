@@ -1,7 +1,7 @@
 package fr.pacifista.bot.discord.modules.giveaway.commands;
 
-import fr.pacifista.bot.core.GiveawaysManager;
-import fr.pacifista.bot.core.entities.giveaways.Giveaway;
+import fr.pacifista.bot.core.giveaways.GiveawaysManager;
+import fr.pacifista.bot.core.giveaways.entities.Giveaway;
 import fr.pacifista.bot.discord.modules.core.commands.BotCommand;
 import lombok.NonNull;
 import net.dv8tion.jda.api.JDA;

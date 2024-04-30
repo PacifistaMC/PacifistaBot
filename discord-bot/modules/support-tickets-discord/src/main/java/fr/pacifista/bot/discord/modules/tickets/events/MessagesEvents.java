@@ -90,7 +90,7 @@ public class MessagesEvents extends ListenerAdapter {
     }
 
     private boolean isTicketsMod(Member member) {
-        final String ticketModRoleId = this.botConfig.getTicketsModRoleID();
+        final String ticketModRoleId = this.botConfig.getTicketsModRoleId();
         final Role ticketModRole = member.getJDA().getRoleById(ticketModRoleId);
         return member.getRoles().contains(ticketModRole);
     }

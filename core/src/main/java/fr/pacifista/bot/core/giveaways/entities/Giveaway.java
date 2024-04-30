@@ -1,6 +1,6 @@
-package fr.pacifista.bot.core.entities.giveaways;
+package fr.pacifista.bot.core.giveaways.entities;
 
-import fr.pacifista.bot.core.entities.giveaways.enums.GiveawayType;
+import fr.pacifista.bot.core.giveaways.enums.GiveawayType;
 import lombok.Getter;
 import lombok.Setter;
 

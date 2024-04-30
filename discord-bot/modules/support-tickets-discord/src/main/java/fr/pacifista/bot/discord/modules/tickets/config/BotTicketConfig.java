@@ -15,6 +15,6 @@ public class BotTicketConfig {
     private String ticketsCategoryId;
     private String ticketsLogsCategoryId;
 
-    private String ticketsModRoleID;
+    private String ticketsModRoleId;
 
 }

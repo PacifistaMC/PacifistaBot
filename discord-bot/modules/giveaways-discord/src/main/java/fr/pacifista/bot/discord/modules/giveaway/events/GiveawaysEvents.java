@@ -1,8 +1,8 @@
-package fr.pacifista.bot.discord.modules.giveaway;
+package fr.pacifista.bot.discord.modules.giveaway.events;
 
-import fr.pacifista.bot.core.GiveawaysManager;
-import fr.pacifista.bot.core.entities.giveaways.Giveaway;
-import fr.pacifista.bot.core.entities.giveaways.enums.GiveawayType;
+import fr.pacifista.bot.core.giveaways.GiveawaysManager;
+import fr.pacifista.bot.core.giveaways.entities.Giveaway;
+import fr.pacifista.bot.core.giveaways.enums.GiveawayType;
 import fr.pacifista.bot.discord.modules.core.utils.Colors;
 import fr.pacifista.bot.discord.modules.giveaway.config.BotGiveawayConfig;
 import lombok.NonNull;
@@ -16,26 +16,46 @@ import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j(topic = "Giveaways Events")
 @Service
-@Slf4j(topic = "Giveaways Utils")
-public class GiveawaysUtils {
-    private final GiveawaysManager giveawaysManager;
-    private final BotGiveawayConfig botConfig;
+public class GiveawaysEvents extends ListenerAdapter {
 
-    public GiveawaysUtils(JDA jda,
-                          BotGiveawayConfig botConfig,
-                          GiveawaysManager giveawaysManager) {
-        this.giveawaysManager = giveawaysManager;
-        this.botConfig = botConfig;
+    private final BotGiveawayConfig botConfig;
+    private final GiveawaysManager giveawaysManager;
+
+    public GiveawaysEvents(final JDA jda,
+                           final BotGiveawayConfig botConfig,
+                           final GiveawaysManager giveawaysManager) {
         jda.addEventListener(this);
+        this.botConfig = botConfig;
+        this.giveawaysManager = giveawaysManager;
     }
 
-    public void createGiveawayFromModal(ModalInteractionEvent event) {
+    @Override
+    public void onStringSelectInteraction(@NonNull StringSelectInteractionEvent event) {
+        if (event.getInteraction().getComponentId().equals("giveaway-roll")) {
+            this.rollGiveaway(event);
+        }
+    }
+
+    @Override
+    public void onModalInteraction(@NotNull ModalInteractionEvent event) {
+        String interactionId = event.getModalId();
+        String modalId = interactionId.split(",")[0];
+
+        if (modalId.equals("giveaway-create")) {
+            this.createGiveawayFromModal(event);
+        }
+    }
+
+    private void createGiveawayFromModal(ModalInteractionEvent event) {
         String giveawaysChannelId = this.botConfig.getGiveawaysChannelId();
         TextChannel channel = event.getJDA().getTextChannelById(giveawaysChannelId);
 
@@ -72,7 +92,7 @@ public class GiveawaysUtils {
         event.reply("Succès !").setEphemeral(true).queue();
     }
 
-    public void rollGiveaway(@NonNull StringSelectInteractionEvent event) {
+    private void rollGiveaway(@NonNull StringSelectInteractionEvent event) {
         String giveawaysChannelId = this.botConfig.getGiveawaysChannelId();
         TextChannel giveawaysChannel = event.getJDA().getTextChannelById(giveawaysChannelId);
 
@@ -143,4 +163,5 @@ public class GiveawaysUtils {
 
         return winners;
     }
+
 }
