@@ -24,6 +24,8 @@ public class BotConfig {
     private String discordChannelLogId;
     private String playerRoleId;
 
+    private String pacifistaChatPublicId;
+
     @Bean(destroyMethod = "shutdown")
     public JDA discordInstance() throws InterruptedException {
         final JDABuilder jdaBuilder = JDABuilder.createDefault(botToken);
