@@ -19,7 +19,7 @@ public class LogMessages extends ListenerAdapter {
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         final Member member = event.getMember();
-        if (member == null) return;
+        if (member == null || member.getUser().isBot()) return;
 
         log.info("[{}] {} : {}", event.getChannel().getName(), member.getEffectiveName(), event.getMessage().getContentRaw());
     }

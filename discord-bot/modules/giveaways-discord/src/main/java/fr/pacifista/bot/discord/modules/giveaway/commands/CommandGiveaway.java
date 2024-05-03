@@ -47,26 +47,21 @@ public class CommandGiveaway extends BotCommand {
     @Override
     public void onCommand(@NonNull SlashCommandInteractionEvent interactionEvent) {
         if (interactionEvent.getSubcommandName() == null) return;
+        final String subCommand = interactionEvent.getSubcommandName();
 
-        switch (interactionEvent.getSubcommandName()) {
-            case "start":
-                startGiveaway(interactionEvent);
-                break;
-            case "roll":
-                rollGiveaway(interactionEvent);
-                break;
-        }
+        if (subCommand.equals("start")) startGiveaway(interactionEvent);
+        else if (subCommand.equals("roll")) rollGiveaway(interactionEvent);
     }
 
     private void startGiveaway(@NonNull SlashCommandInteractionEvent interactionEvent) {
-        TextInput prize = TextInput.create("giveaway-prize", "Récompense du giveaway", TextInputStyle.SHORT)
+        final TextInput prize = TextInput.create("giveaway-prize", "Récompense du giveaway", TextInputStyle.SHORT)
                 .setPlaceholder("Exemple: 1 mois de Pacifista+")
                 .setMinLength(1)
                 .setMaxLength(50)
                 .setRequired(true)
                 .build();
 
-        TextInput pacifistaCommandToSend = TextInput.create(
+        final TextInput pacifistaCommandToSend = TextInput.create(
                     "giveaway-pacifista-command",
                     "Commande à envoyer au serveur",
                     TextInputStyle.SHORT)
@@ -75,14 +70,14 @@ public class CommandGiveaway extends BotCommand {
                 .setRequired(true)
                 .build();
 
-        TextInput winners = TextInput.create("giveaway-winners", "Nombre de gagnants", TextInputStyle.SHORT)
+        final TextInput winners = TextInput.create("giveaway-winners", "Nombre de gagnants", TextInputStyle.SHORT)
                 .setPlaceholder("1")
                 .setMinLength(1)
                 .setMaxLength(2)
                 .setRequired(false)
                 .build();
 
-        Modal modal = Modal.create("giveaway-create", "Crée un giveaway")
+        final Modal modal = Modal.create("giveaway-create", "Crée un giveaway")
                 .addActionRow(prize)
                 .addActionRow(pacifistaCommandToSend)
                 .addActionRow(winners)
@@ -92,13 +87,14 @@ public class CommandGiveaway extends BotCommand {
     }
 
     private void rollGiveaway(@NonNull SlashCommandInteractionEvent interactionEvent) {
-        List<Giveaway> giveawayList = this.giveawaysManager.getGiveaways();
+        final List<Giveaway> giveawayList = this.giveawaysManager.getGiveaways();
         if (giveawayList.isEmpty()) {
             interactionEvent.reply("Aucun giveaway n'est actuellement en cours.")
                     .setEphemeral(true)
                     .queue();
             return;
         }
+
         StringSelectMenu.Builder menuBuilder = StringSelectMenu.create("giveaway-roll");
 
         for (Giveaway gw : giveawayList) {

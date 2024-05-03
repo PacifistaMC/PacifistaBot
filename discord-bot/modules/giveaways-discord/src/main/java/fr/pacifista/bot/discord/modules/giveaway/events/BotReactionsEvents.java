@@ -24,24 +24,24 @@ public class BotReactionsEvents extends ListenerAdapter {
 
     @Override
     public void onMessageReactionAdd(@NotNull MessageReactionAddEvent event) {
-        Member member = event.retrieveMember().complete();
+        final Member member = event.retrieveMember().complete();
         if (member.getUser().isBot()) return;
-        Giveaway giveaway = isGiveaway(event.getMessageId());
+
+        final Giveaway giveaway = isGiveaway(event.getMessageId());
         if (giveaway != null) {
-            String memberId = member.getId();
-            giveaway.addParticipant(memberId);
+            giveaway.addParticipant(member.getId());
             this.giveawaysManager.updateGiveaway(giveaway);
         }
     }
 
     @Override
     public void onMessageReactionRemove(@NotNull MessageReactionRemoveEvent event) {
-        Member member = event.retrieveMember().complete();
+        final Member member = event.retrieveMember().complete();
         if (member.getUser().isBot()) return;
-        Giveaway giveaway = isGiveaway(event.getMessageId());
+
+        final Giveaway giveaway = isGiveaway(event.getMessageId());
         if (giveaway != null) {
-            String memberId = member.getId();
-            giveaway.removeParticipant(memberId);
+            giveaway.removeParticipant(member.getId());
             this.giveawaysManager.updateGiveaway(giveaway);
         }
     }
@@ -50,8 +50,8 @@ public class BotReactionsEvents extends ListenerAdapter {
         List<Giveaway> giveawayList = this.giveawaysManager.getGiveaways();
 
         for (Giveaway giveaway : giveawayList) {
-            if (    giveaway.getGiveawayType().equals(GiveawayType.DISCORD) &&
-                    giveaway.getDiscordMessageId().equals(messageId)) {
+            if (giveaway.getGiveawayType().equals(GiveawayType.DISCORD) &&
+                giveaway.getDiscordMessageId().equals(messageId)) {
                 return giveaway;
             }
         }

@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import java.awt.*;
 import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 @Slf4j
@@ -29,8 +28,6 @@ public class WelcomeMembersEvents extends ListenerAdapter {
     private final Role playerRole;
     private final TextChannel welcomeChannel;
     private final TextChannel logChannel;
-
-    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("d/MM/yyyy HH:mm");
 
 
     public WelcomeMembersEvents(final JDA jda,
@@ -70,7 +67,7 @@ public class WelcomeMembersEvents extends ListenerAdapter {
         embedBuilder.setThumbnail(userJoined.getAvatarUrl());
         welcomeChannel.sendMessageEmbeds(embedBuilder.build()).queue();
 
-        embedBuilder.addField("Date de création", dateTimeFormatter.format(creationDate), false);
+        embedBuilder.addField("Date de création", String.format("<t:%s>", creationDateTime), false);
         long diff = nowTime - creationDateTime;
         if (diff <= 172800) {
             embedBuilder.addField(":warning: Attention :warning:", "Compte créé il y a moins de 2 jours !", false);

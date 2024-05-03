@@ -18,10 +18,12 @@ import java.util.List;
 @Service
 public class CommandIP extends BotCommand {
 
+    private static final String WEBSITE_URL = "https://pacifista.fr";
+
     private final MessageEmbed messageEmbed = new EmbedBuilder()
-            .setTitle("Pacifista Minecraft", "https://pacifista.fr")
+            .setTitle("Pacifista Minecraft", WEBSITE_URL)
             .setDescription("Serveur minecraft survie")
-            .addField("Site web", "https://pacifista.fr", true)
+            .addField("Site web", WEBSITE_URL, true)
             .addField("IP de connexion", "play.pacifista.fr", true)
             .addField("Version", "1.20.4", true)
             .setColor(Colors.PACIFISTA_COLOR)
@@ -29,17 +31,17 @@ public class CommandIP extends BotCommand {
 
     private final List<ItemComponent> buttons = List.of(
             Button.link(
-                    "https://pacifista.fr",
+                    WEBSITE_URL,
                     "Accéder au site Web"
             ).withEmoji(Emoji.fromUnicode("🌐")),
             Button.link(
-                    "https://pacifista.fr/join",
+                    WEBSITE_URL + "/join",
                     "Se connecter au serveur"
             ).withEmoji(Emoji.fromUnicode("🎮")),
             Button.link(
-                    "https://pacifista.fr/shop",
+                    WEBSITE_URL + "/shop",
                     "Accéder à la boutique"
-            ).withEmoji(Emoji.fromUnicode("💰"))
+            ).withEmoji(Emoji.fromUnicode("🛒"))
     );
 
     public CommandIP(JDA jda) {

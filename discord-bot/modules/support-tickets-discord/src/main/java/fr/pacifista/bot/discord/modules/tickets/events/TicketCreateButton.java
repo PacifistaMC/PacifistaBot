@@ -136,7 +136,7 @@ public class TicketCreateButton extends ButtonEvent {
                 ticketDTO = this.ticketClient.create(ticketDTO);
             } catch (ApiException e) {
                 event.reply(":warning: Impossible de créer le ticket").queue();
-                log.warn("Impossible de créer le ticket", e);
+                log.error("Impossible de créer le ticket", e);
             }
             createTicket(event, ticketType, ticketDTO.getId());
         }

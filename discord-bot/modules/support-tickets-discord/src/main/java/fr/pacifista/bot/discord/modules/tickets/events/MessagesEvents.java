@@ -56,10 +56,10 @@ public class MessagesEvents extends ListenerAdapter {
                 ticketDTO = this.ticketClient.findById(ticketId);
             } catch (ApiNotFoundException e) {
                 channel.sendMessage(":warning: Impossible de récupérer le ticket.").queue();
-                log.warn("Impossible de récupérer le ticket: ID: {}, ChannelID: {}", ticketId, channel.getId());
+                log.error("Impossible de récupérer le ticket: ID: {}, ChannelID: {}", ticketId, channel.getId());
             } catch (ApiException e) {
                 channel.sendMessage(":warning: Une erreur API est survenue lors de la récupération du ticket.").queue();
-                log.warn("Impossible de récupérer le ticket", e);
+                log.error("Impossible de récupérer le ticket", e);
             }
 
             if (ticketDTO == null) return;
@@ -75,7 +75,7 @@ public class MessagesEvents extends ListenerAdapter {
                     this.ticketClient.update(ticketDTO);
                 } catch (ApiException e) {
                     channel.sendMessage(":warning: Impossible de mettre à jour le ticket.").queue();
-                    log.warn("Impossible d'update le ticket", e);
+                    log.error("Impossible d'update le ticket", e);
                 }
             }
 
@@ -91,7 +91,7 @@ public class MessagesEvents extends ListenerAdapter {
                 this.ticketMessageClient.create(ticketMessageDTO);
             } catch (ApiException e) {
                 channel.sendMessage(":warning: Impossible de créer le message du ticket.").queue();
-                log.warn("Impossible de créer le ticket message", e);
+                log.error("Impossible de créer le ticket message", e);
             }
         }
     }

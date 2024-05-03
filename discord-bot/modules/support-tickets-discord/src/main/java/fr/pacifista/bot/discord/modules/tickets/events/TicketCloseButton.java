@@ -55,10 +55,10 @@ public class TicketCloseButton extends ButtonEvent {
                 ticketDTO = this.ticketClient.findById(ticketId);
             } catch (ApiNotFoundException e) {
                 channel.sendMessage(":warning: Impossible de récupérer le ticket.").queue();
-                log.warn("Impossible de récupérer le ticket: ID: {}, ChannelID: {}", ticketId, channel.getId());
+                log.error("Impossible de récupérer le ticket: ID: {}, ChannelID: {}", ticketId, channel.getId());
             } catch (ApiException e) {
                 channel.sendMessage(":warning: Une erreur API est survenue lors de la récupération du ticket.").queue();
-                log.warn("Impossible de récupérer le ticket", e);
+                log.error("Impossible de récupérer le ticket", e);
             }
 
             if (ticketDTO == null) return;
@@ -75,7 +75,7 @@ public class TicketCloseButton extends ButtonEvent {
                     .setTitle("Ticket archivé")
                     .setDescription(String.format(
                             "Ticket archivé le <t:%s> par `%s` (`%s`). ID: `%s`",
-                            archivedDate.toInstant().toEpochMilli() / 1000,
+                            archivedDate.toInstant().getEpochSecond(),
                             user.getName(),
                             user.getId(),
                             ticketId
@@ -94,7 +94,7 @@ public class TicketCloseButton extends ButtonEvent {
         try {
             this.ticketClient.update(ticketDTO);
         } catch (ApiException e) {
-            log.warn("Impossible de fermer le ticket ID: {}", ticketDTO.getId());
+            log.error("Impossible de fermer le ticket ID: {}", ticketDTO.getId());
         }
     }
 }

@@ -29,6 +29,7 @@ public class GiveawaysEvents extends ListenerAdapter {
 
     private final BotGiveawayConfig botConfig;
     private final GiveawaysManager giveawaysManager;
+    private final Random random = new Random();
 
     public GiveawaysEvents(final JDA jda,
                            final BotGiveawayConfig botConfig,
@@ -47,8 +48,8 @@ public class GiveawaysEvents extends ListenerAdapter {
 
     @Override
     public void onModalInteraction(@NotNull ModalInteractionEvent event) {
-        String interactionId = event.getModalId();
-        String modalId = interactionId.split(",")[0];
+        final String interactionId = event.getModalId();
+        final String modalId = interactionId.split(":")[0];
 
         if (modalId.equals("giveaway-create")) {
             this.createGiveawayFromModal(event);
@@ -56,10 +57,9 @@ public class GiveawaysEvents extends ListenerAdapter {
     }
 
     private void createGiveawayFromModal(ModalInteractionEvent event) {
-        String giveawaysChannelId = this.botConfig.getGiveawaysChannelId();
-        TextChannel channel = event.getJDA().getTextChannelById(giveawaysChannelId);
+        final TextChannel channel = event.getGuild().getTextChannelById(this.botConfig.getGiveawaysChannelId());
 
-        if (channel == null || channel.getType() != ChannelType.TEXT) {
+        if (channel == null) {
             log.error("Impossible de récupérer le salon des giveaways.");
             return;
         }
@@ -82,7 +82,7 @@ public class GiveawaysEvents extends ListenerAdapter {
                 .build();
 
         channel.sendMessage(String.format("<@&%s>",this.botConfig.getGiveawaysRoleId())).queue();
-        Message message = channel.sendMessageEmbeds(embedBuilder).complete();
+        final Message message = channel.sendMessageEmbeds(embedBuilder).complete();
 
         message.addReaction(Emoji.fromUnicode("🎁")).queue();
 
@@ -93,17 +93,17 @@ public class GiveawaysEvents extends ListenerAdapter {
     }
 
     private void rollGiveaway(@NonNull StringSelectInteractionEvent event) {
-        String giveawaysChannelId = this.botConfig.getGiveawaysChannelId();
-        TextChannel giveawaysChannel = event.getJDA().getTextChannelById(giveawaysChannelId);
+        final String giveawaysChannelId = this.botConfig.getGiveawaysChannelId();
+        final TextChannel giveawaysChannel = event.getGuild().getTextChannelById(giveawaysChannelId);
 
-        if (giveawaysChannel == null || giveawaysChannel.getType() != ChannelType.TEXT) {
+        if (giveawaysChannel == null) {
             log.error("Impossible de récupérer le salon des giveaways.");
             return;
         }
 
-        UUID giveawayId = UUID.fromString(event.getValues().get(0));
-        Giveaway giveaway = this.giveawaysManager.getGiveawayById(giveawayId);
-        List<String> participantsIds = giveaway.getParticipantsIds();
+        final UUID giveawayId = UUID.fromString(event.getValues().get(0));
+        final Giveaway giveaway = this.giveawaysManager.getGiveawayById(giveawayId);
+        final List<String> participantsIds = giveaway.getParticipantsIds();
 
         if (giveaway.getWinners() > participantsIds.size()) {
             event.reply("Il y a plus de gagnants que de participants.")
@@ -112,19 +112,19 @@ public class GiveawaysEvents extends ListenerAdapter {
             return;
         }
 
-        List<String> winnersIds = this.rollWinners(giveaway);
-        List<String> winnerTags = winnersIds.stream()
+        final List<String> winnersIds = this.rollWinners(giveaway);
+        final List<String> winnerTags = winnersIds.stream()
                 .map(id -> "<@" + id + ">")
-                .collect(Collectors.toList());
+                .toList();
 
-        String message = String.format(
+        final String message = String.format(
                 "Bravo à %s qui remporte%s **%s** !",
                 String.join(", ", winnerTags),
                 giveaway.getWinners() > 1 ? "nt" : "",
                 giveaway.getPrize()
         );
 
-        MessageEmbed embedBuilder = new EmbedBuilder()
+        final MessageEmbed embedBuilder = new EmbedBuilder()
                 .setColor(Colors.PACIFISTA_COLOR)
                 .setTitle(String.format("Giveaway: %s", giveaway.getPrize()))
                 .setDescription(String.format(
@@ -137,7 +137,7 @@ public class GiveawaysEvents extends ListenerAdapter {
 
         this.giveawaysManager.deleteGiveaway(giveawayId);
 
-        Message giveawayMessage = giveawaysChannel.retrieveMessageById(giveaway.getDiscordMessageId()).complete();
+        final Message giveawayMessage = giveawaysChannel.retrieveMessageById(giveaway.getDiscordMessageId()).complete();
         giveawayMessage
                 .editMessageEmbeds(embedBuilder)
                 .queue();
@@ -150,11 +150,10 @@ public class GiveawaysEvents extends ListenerAdapter {
     }
 
     private List<String> rollWinners(Giveaway giveaway) {
-        Random random = new Random();
         List<String> winners = new ArrayList<>();
 
         while (winners.size() < giveaway.getWinners()) {
-            int winnerIndex = random.nextInt(0, giveaway.getParticipantsIds().size());
+            int winnerIndex = this.random.nextInt(0, giveaway.getParticipantsIds().size());
             String winnerId = giveaway.getParticipantsIds().get(winnerIndex);
 
             winners.add(winnerId);
