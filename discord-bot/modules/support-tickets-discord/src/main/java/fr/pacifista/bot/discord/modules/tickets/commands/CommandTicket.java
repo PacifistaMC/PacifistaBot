@@ -5,12 +5,11 @@ import fr.pacifista.bot.discord.modules.core.utils.Colors;
 import fr.pacifista.bot.discord.modules.tickets.config.BotTicketConfig;
 import fr.pacifista.bot.discord.modules.tickets.events.TicketCloseButton;
 import fr.pacifista.bot.discord.modules.tickets.events.TicketCreateButton;
+import fr.pacifista.bot.discord.modules.tickets.utils.TicketUtils;
 import lombok.NonNull;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.channel.Channel;
-import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
@@ -68,16 +67,13 @@ public class CommandTicket extends BotCommand {
     }
 
     private void closeTicket(@NonNull SlashCommandInteractionEvent interactionEvent) {
-        Channel channel = interactionEvent.getChannel();
-
-        if (channel.getType() != ChannelType.TEXT || !channel.getName().contains("ticket-")) {
+        if (interactionEvent.getChannel() instanceof TextChannel channel && TicketUtils.isTicketChannel(channel, this.botConfig.getTicketsCategoryId())) {
+            interactionEvent.reply("Êtes vous sûr de vouloir fermer ce ticket ? Il ne sera plus accessible.")
+                    .addActionRow(this.ticketCloseButton.createButton())
+                    .queue();
+        } else {
             interactionEvent.reply(":warning: Ce salon n'est pas un ticket !").queue();
-            return;
         }
-
-        interactionEvent.reply("Êtes vous sûr de vouloir fermer ce ticket ? Il ne sera plus accessible.")
-                .addActionRow(this.ticketCloseButton.createButton())
-                .queue();
     }
 
     private void sendTicketMessage(@NonNull SlashCommandInteractionEvent interactionEvent) {

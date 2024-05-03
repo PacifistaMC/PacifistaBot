@@ -1,15 +1,16 @@
 package fr.pacifista.bot.discord.modules.tickets.events;
 
+import com.funixproductions.core.exceptions.ApiException;
 import fr.pacifista.api.support.tickets.client.clients.PacifistaSupportTicketClient;
 import fr.pacifista.api.support.tickets.client.dtos.PacifistaSupportTicketDTO;
 import fr.pacifista.api.support.tickets.client.enums.TicketCreationSource;
 import fr.pacifista.api.support.tickets.client.enums.TicketStatus;
 import fr.pacifista.api.support.tickets.client.enums.TicketType;
-import fr.pacifista.bot.core.exceptions.PacifistaBotException;
 import fr.pacifista.bot.discord.modules.core.events.buttons.ButtonEvent;
 import fr.pacifista.bot.discord.modules.core.utils.Colors;
 import fr.pacifista.bot.discord.modules.tickets.config.BotTicketConfig;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
@@ -29,13 +30,14 @@ import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
 import net.dv8tion.jda.api.interactions.components.text.TextInput;
 import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
 import net.dv8tion.jda.api.interactions.modals.Modal;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.UUID;
 
+@Slf4j(topic = "TicketCreateButton")
 @Service
 public class TicketCreateButton extends ButtonEvent {
     private final List<SelectOption> options = List.of(
@@ -73,8 +75,8 @@ public class TicketCreateButton extends ButtonEvent {
     }
 
     @Override
-    public void onButtonEvent(@NotNull ButtonInteractionEvent event) throws PacifistaBotException {
-        SelectMenu select = StringSelectMenu.create(getButtonId())
+    public void onButtonEvent(@NonNull ButtonInteractionEvent event) {
+        final SelectMenu select = StringSelectMenu.create(getButtonId())
                 .setPlaceholder("Sélectionne le type de ticket")
                 .setId(getButtonId())
                 .setRequiredRange(1, 1)
@@ -89,19 +91,19 @@ public class TicketCreateButton extends ButtonEvent {
 
     @Override
     public void onStringSelectInteraction(@NonNull StringSelectInteractionEvent event) {
-        String selectId = event.getInteraction().getComponentId();
+        final String selectId = event.getInteraction().getComponentId();
 
         if (selectId.equals(getButtonId())) {
             String ticketType = event.getValues().get(0);
 
-            TextInput object = TextInput.create("object", "Objet", TextInputStyle.SHORT)
+            final TextInput object = TextInput.create("object", "Objet", TextInputStyle.SHORT)
                     .setPlaceholder("Objet du ticket")
                     .setMinLength(10)
                     .setMaxLength(100)
                     .setRequired(true)
                     .build();
 
-            Modal modal = Modal.create(String.format("ticket-create,%s", ticketType), "Crée un ticket")
+            final Modal modal = Modal.create(String.format("ticket-create:%s", ticketType), "Crée un ticket")
                     .addActionRow(object)
                     .build();
 
@@ -110,17 +112,15 @@ public class TicketCreateButton extends ButtonEvent {
     }
 
     @Override
-    public void onModalInteraction(@NotNull ModalInteractionEvent event) {
-        String interactionId = event.getModalId();
-        String modalId = interactionId.split(",")[0];
-        String arg = null;
-        if (interactionId.contains(",")) arg = interactionId.split(",")[1];
-
-        User user = event.getUser();
+    public void onModalInteraction(@NonNull ModalInteractionEvent event) {
+        final String interactionId = event.getModalId();
+        if (!interactionId.contains(":")) return;
+        final String modalId = interactionId.split(":")[0];
+        final String type = interactionId.split(":")[1];
+        final User user = event.getUser();
 
         if (modalId.equals("ticket-create")) {
-            if (arg == null) return;
-            TicketType ticketType = TicketType.valueOf(arg.toUpperCase());
+            final TicketType ticketType = TicketType.valueOf(type.toUpperCase());
             String object = event.getValue("object").getAsString();
 
             PacifistaSupportTicketDTO ticketDTO = new PacifistaSupportTicketDTO();
@@ -132,8 +132,13 @@ public class TicketCreateButton extends ButtonEvent {
             ticketDTO.setObject(object);
             ticketDTO.setStatus(TicketStatus.CREATED);
 
-            createTicket(event, ticketType);
-            this.ticketClient.create(ticketDTO);
+            try {
+                ticketDTO = this.ticketClient.create(ticketDTO);
+            } catch (ApiException e) {
+                event.reply(":warning: Impossible de créer le ticket").queue();
+                log.warn("Impossible de créer le ticket", e);
+            }
+            createTicket(event, ticketType, ticketDTO.getId());
         }
     }
 
@@ -142,15 +147,15 @@ public class TicketCreateButton extends ButtonEvent {
         return Button.primary(getButtonId(), "Créer un ticket");
     }
 
-    private void createTicket(@NonNull ModalInteractionEvent event, TicketType ticketType) {
-        Category category = event.getJDA().getCategoryById(botConfig.getTicketsCategoryId());
-        User ticketOwner = event.getUser();
-        TextChannel ticketChannel = category.createTextChannel(String.format("ticket-%s", ticketOwner.getGlobalName()))
-                .setTopic(ticketOwner.getId())
+    private void createTicket(@NonNull ModalInteractionEvent event, TicketType ticketType, UUID ticketId) {
+        final Category category = event.getJDA().getCategoryById(botConfig.getTicketsCategoryId());
+        final User ticketOwner = event.getUser();
+        final TextChannel ticketChannel = category.createTextChannel(String.format("ticket-%s", ticketOwner.getGlobalName()))
+                .setTopic(ticketId.toString())
                 .complete();
 
-        Role modRole = event.getJDA().getRoleById(botConfig.getTicketsModRoleId());
-        Role everyoneRole = event.getGuild().getRolesByName("@everyone", true).get(0);
+        final Role modRole = event.getJDA().getRoleById(botConfig.getTicketsModRoleId());
+        final Role everyoneRole = event.getGuild().getRolesByName("@everyone", true).get(0);
 
         ticketChannel.getManager()
                 .putPermissionOverride(event.getMember(), EnumSet.of(Permission.VIEW_CHANNEL, Permission.MESSAGE_SEND), null)
@@ -169,7 +174,6 @@ public class TicketCreateButton extends ButtonEvent {
                 .addField(new MessageEmbed.Field("Type", ticketType.name(), true))
                 .addField(new MessageEmbed.Field("Objet", event.getValue("object").getAsString(), true));
 
-        ticketChannel.sendMessageEmbeds(embed.build())
-                .queue();
+        ticketChannel.sendMessageEmbeds(embed.build()).queue();
     }
 }

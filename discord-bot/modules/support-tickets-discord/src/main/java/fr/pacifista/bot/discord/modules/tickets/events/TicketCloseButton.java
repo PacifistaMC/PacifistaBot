@@ -1,18 +1,18 @@
 package fr.pacifista.bot.discord.modules.tickets.events;
 
+import com.funixproductions.core.exceptions.ApiException;
+import com.funixproductions.core.exceptions.ApiNotFoundException;
 import fr.pacifista.api.support.tickets.client.clients.PacifistaSupportTicketClient;
 import fr.pacifista.api.support.tickets.client.dtos.PacifistaSupportTicketDTO;
 import fr.pacifista.api.support.tickets.client.enums.TicketStatus;
 import fr.pacifista.bot.discord.modules.core.events.buttons.ButtonEvent;
 import fr.pacifista.bot.discord.modules.core.utils.Colors;
 import fr.pacifista.bot.discord.modules.tickets.config.BotTicketConfig;
+import fr.pacifista.bot.discord.modules.tickets.utils.TicketUtils;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.entities.channel.Channel;
-import net.dv8tion.jda.api.entities.channel.ChannelType;
-import net.dv8tion.jda.api.entities.channel.concrete.Category;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+@Slf4j(topic = "TicketCloseButton")
 @Service
 public class TicketCloseButton extends ButtonEvent {
     private final PacifistaSupportTicketClient ticketClient;
@@ -44,48 +45,56 @@ public class TicketCloseButton extends ButtonEvent {
 
     @Override
     public void onButtonEvent(@NotNull ButtonInteractionEvent event) {
-        Role ticketModRole = event.getJDA().getRoleById(botConfig.getTicketsModRoleId());
-        Channel channel = event.getChannel();
-        Member member = event.getMember();
-        String ticketOwnerUsername = channel.getName().split("-")[1];
-        Member ticketOwner = event.getGuild().getMembersByName(ticketOwnerUsername, true).get(0);
+        if (event.getChannel() instanceof TextChannel channel && TicketUtils.isTicketChannel(channel, botConfig.getTicketsCategoryId())) {
+            event.reply("Fermeture du ticket...").queue();
+            final User user = event.getUser();
+            final String ticketId = channel.getTopic();
+            PacifistaSupportTicketDTO ticketDTO = null;
 
-        if (channel.getType() != ChannelType.TEXT || !channel.getName().contains("ticket-")) {
+            try {
+                ticketDTO = this.ticketClient.findById(ticketId);
+            } catch (ApiNotFoundException e) {
+                channel.sendMessage(":warning: Impossible de récupérer le ticket.").queue();
+                log.warn("Impossible de récupérer le ticket: ID: {}, ChannelID: {}", ticketId, channel.getId());
+            } catch (ApiException e) {
+                channel.sendMessage(":warning: Une erreur API est survenue lors de la récupération du ticket.").queue();
+                log.warn("Impossible de récupérer le ticket", e);
+            }
+
+            if (ticketDTO == null) return;
+
+            channel.delete().queue();
+
+            final TextChannel ticketsLogsChannel = event.getGuild().getTextChannelById(botConfig.getTicketsLogsChannelId());
+            if (ticketsLogsChannel == null) return;
+
+            final Date archivedDate = Date.from(event.getTimeCreated().toInstant());
+
+            EmbedBuilder embed = new EmbedBuilder()
+                    .setColor(Colors.PACIFISTA_COLOR)
+                    .setTitle("Ticket archivé")
+                    .setDescription(String.format(
+                            "Ticket archivé le <t:%s> par `%s` (`%s`). ID: `%s`",
+                            archivedDate.toInstant().toEpochMilli() / 1000,
+                            user.getName(),
+                            user.getId(),
+                            ticketId
+                    ));
+
+            ticketsLogsChannel.sendMessageEmbeds(embed.build()).queue();
+            closeTicket(ticketDTO, archivedDate);
+        } else {
             event.reply(":warning: Ce salon n'est pas un ticket !").queue();
         }
-
-        TextChannel ticketChannel = (TextChannel) channel;
-        Category ticketsLogsCategory = event.getJDA().getCategoryById(botConfig.getTicketsLogsCategoryId());
-
-        if (!member.getRoles().contains(ticketModRole)) {
-            ticketChannel.getManager().removePermissionOverride(event.getMember().getIdLong()).queue();
-        }
-
-        event.getMessage().delete().queue();
-
-        ticketChannel.getManager().setParent(ticketsLogsCategory).queue();
-
-        Date archivedDate = Date.from(event.getTimeCreated().toInstant());
-        String archiveFormattedDate = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(archivedDate);
-
-        EmbedBuilder embed = new EmbedBuilder()
-                .setColor(Colors.PACIFISTA_COLOR)
-                .setTitle("Ticket archivé")
-                .setDescription(String.format("Ticket archivé le `%s` par `%s` (`%s`)", archiveFormattedDate, member.getUser().getName(), member.getUser().getId()));
-
-        ticketChannel.sendMessageEmbeds(embed.build()).queue();
-        closeTicket(ticketOwner.getId(), archivedDate);
     }
 
-    private void closeTicket(String ticketOwnerId, Date updatedAt) {
-        PacifistaSupportTicketDTO ticketDTO = this.ticketClient.getAll(
-                "0",
-                "1",
-                String.format("createdById:like:%s", ticketOwnerId),
-                "").getContent().get(0);
-
+    private void closeTicket(final PacifistaSupportTicketDTO ticketDTO, final Date updatedAt) {
         ticketDTO.setStatus(TicketStatus.SOLVED);
         ticketDTO.setUpdatedAt(updatedAt);
-        this.ticketClient.update(ticketDTO);
+        try {
+            this.ticketClient.update(ticketDTO);
+        } catch (ApiException e) {
+            log.warn("Impossible de fermer le ticket ID: {}", ticketDTO.getId());
+        }
     }
 }
