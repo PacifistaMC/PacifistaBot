@@ -65,8 +65,8 @@ jobs:
       - name: Discord notification
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_CI_STATUS }}
-          DISCORD_USERNAME: FunixBot-Deploy
-          DISCORD_AVATAR: https://avatars.githubusercontent.com/u/99349214?s=200&v=4
+          DISCORD_USERNAME: PacifistaBot-Deploy
+          DISCORD_AVATAR: https://avatars.githubusercontent.com/u/99340299?s=96&v=4
         uses: Ilshidur/action-discord@master
         with:
-          args: '✅ FunixBot à été déployé sur pterodactyl !'
+          args: '✅ PacifistaBot Discord à été déployé sur pterodactyl !'
