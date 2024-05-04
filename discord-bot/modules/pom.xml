@@ -5,30 +5,25 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>fr.pacifista.api</groupId>
-        <artifactId>pacifista-api</artifactId>
-        <version>1.5.2.3</version>
+        <groupId>fr.pacifista.bot.discord</groupId>
+        <artifactId>pacifista-bot-discord</artifactId>
+        <version>2.0.0</version>
     </parent>
 
-    <groupId>fr.pacifista.bot</groupId>
-    <artifactId>pacifista-bot</artifactId>
-    <version>2.0.0</version>
+    <groupId>fr.pacifista.bot.discord.modules</groupId>
+    <artifactId>pacifista-bot-discord-modules</artifactId>
     <packaging>pom</packaging>
 
     <modules>
-        <module>discord-bot</module>
-        <module>core</module>
+        <module>core-discord</module>
+        <module>support-tickets-discord</module>
+        <module>giveaways-discord</module>
     </modules>
 
     <properties>
-        <!-- https://github.com/DV8FromTheWorld/JDA -->
-        <discord.jda.version>5.0.0-beta.23</discord.jda.version>
-
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-        <fr.pacifista.bot.version>2.0.0</fr.pacifista.bot.version>
     </properties>
 
 </project>
