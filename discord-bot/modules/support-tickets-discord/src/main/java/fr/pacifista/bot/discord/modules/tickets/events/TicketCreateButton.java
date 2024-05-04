@@ -65,13 +65,16 @@ public class TicketCreateButton extends ButtonEvent {
 
     private final BotTicketConfig botConfig;
     private final PacifistaSupportTicketClient ticketClient;
+    private final TicketCloseButton ticketCloseButton;
 
     public TicketCreateButton(final JDA jda,
                               final BotTicketConfig botConfig,
-                              final PacifistaSupportTicketClient ticketClient) {
+                              final PacifistaSupportTicketClient ticketClient,
+                              final TicketCloseButton ticketCloseButton) {
         super(jda, "ticket-create");
         this.botConfig = botConfig;
         this.ticketClient = ticketClient;
+        this.ticketCloseButton = ticketCloseButton;
     }
 
     @Override
@@ -174,6 +177,8 @@ public class TicketCreateButton extends ButtonEvent {
                 .addField(new MessageEmbed.Field("Type", ticketType.name(), true))
                 .addField(new MessageEmbed.Field("Objet", event.getValue("object").getAsString(), true));
 
-        ticketChannel.sendMessageEmbeds(embed.build()).queue();
+        ticketChannel.sendMessageEmbeds(embed.build())
+                .addActionRow(this.ticketCloseButton.createButton())
+                .queue();
     }
 }
