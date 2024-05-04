@@ -57,8 +57,7 @@ jobs:
 
   send-success-build-discord-notif:
     needs:
-      - build-funixbot-twitch-and-restart-prod
-      - build-funixbot-discord-and-restart-prod
+      - build-pacifistabot-discord-and-restart-prod
 
     runs-on: ubuntu-latest
 
