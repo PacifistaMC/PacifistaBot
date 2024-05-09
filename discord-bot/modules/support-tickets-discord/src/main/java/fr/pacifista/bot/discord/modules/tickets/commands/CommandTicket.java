@@ -67,13 +67,11 @@ public class CommandTicket extends BotCommand {
     }
 
     private void closeTicket(@NonNull SlashCommandInteractionEvent interactionEvent) {
-        if (interactionEvent.getChannel() instanceof TextChannel channel && TicketUtils.isTicketChannel(channel, this.botConfig.getTicketsCategoryId())) {
-            interactionEvent.reply("Êtes vous sûr de vouloir fermer ce ticket ? Il ne sera plus accessible.")
-                    .addActionRow(this.ticketCloseButton.createButton())
-                    .queue();
-        } else {
-            interactionEvent.reply(":warning: Ce salon n'est pas un ticket !").queue();
-        }
+        if (!TicketUtils.handleTicketChannel(interactionEvent, this.botConfig.getTicketsCategoryId())) return;
+
+        interactionEvent.reply("Êtes vous sûr de vouloir fermer ce ticket ? Il ne sera plus accessible.")
+                .addActionRow(this.ticketCloseButton.createButton())
+                .queue();
     }
 
     private void sendTicketMessage(@NonNull SlashCommandInteractionEvent interactionEvent) {
