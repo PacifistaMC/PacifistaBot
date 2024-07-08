@@ -22,7 +22,7 @@
 
     <properties>
         <!-- https://github.com/DV8FromTheWorld/JDA -->
-        <discord.jda.version>5.0.0-beta.24</discord.jda.version>
+        <discord.jda.version>5.0.0</discord.jda.version>
 
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
