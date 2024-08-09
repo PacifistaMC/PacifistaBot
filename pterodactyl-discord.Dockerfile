@@ -1,6 +1,6 @@
-FROM openjdk:17-jdk
+FROM openjdk:21-slim
 
-ENV PACIFISTA_BOT_VERSION=2.0.0
+ENV PACIFISTA_BOT_VERSION=2.0.1
 
 RUN useradd -m -d /home/container container
 USER container
