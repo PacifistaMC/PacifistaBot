@@ -7,18 +7,26 @@
     <parent>
         <groupId>fr.pacifista.api</groupId>
         <artifactId>pacifista-api</artifactId>
-        <version>1.5.3.3</version>
+        <version>1.5.4.1</version>
     </parent>
 
     <groupId>fr.pacifista.bot</groupId>
     <artifactId>pacifista-bot</artifactId>
-    <version>2.0.0</version>
+    <version>2.0.1</version>
     <packaging>pom</packaging>
 
     <modules>
         <module>discord-bot</module>
         <module>core</module>
     </modules>
+
+    <repositories>
+        <repository>
+            <id>funixproductions-repository-releases</id>
+            <name>FunixProductions Repository</name>
+            <url>https://mvn.funixproductions.com/releases</url>
+        </repository>
+    </repositories>
 
     <properties>
         <!-- https://github.com/DV8FromTheWorld/JDA -->
@@ -28,7 +36,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <fr.pacifista.bot.version>2.0.0</fr.pacifista.bot.version>
+        <fr.pacifista.bot.version>2.0.1</fr.pacifista.bot.version>
     </properties>
 
 </project>

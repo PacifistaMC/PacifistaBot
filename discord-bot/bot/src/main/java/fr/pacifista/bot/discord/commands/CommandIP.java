@@ -25,7 +25,7 @@ public class CommandIP extends BotCommand {
             .setDescription("Serveur minecraft survie")
             .addField("Site web", WEBSITE_URL, true)
             .addField("IP de connexion", "play.pacifista.fr", true)
-            .addField("Version", "1.20.4", true)
+            .addField("Version", "1.20.6", true)
             .setColor(Colors.PACIFISTA_COLOR)
             .build();
 
