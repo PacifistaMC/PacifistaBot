@@ -8,11 +8,13 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.managers.Presence;
 import org.springframework.lang.Nullable;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
 
 import java.util.concurrent.TimeUnit;
 
 @Slf4j(topic = "UpdatePlayerCountTasks")
 @RequiredArgsConstructor
+@Service
 public class UpdatePlayerCountTasks {
 
     private final JDA jda;
