@@ -1,7 +1,7 @@
 package fr.pacifista.bot.discord.modules.giveaway.commands;
 
-import fr.pacifista.bot.core.giveaways.GiveawaysManager;
 import fr.pacifista.bot.core.giveaways.entities.Giveaway;
+import fr.pacifista.bot.core.giveaways.services.GiveawaysService;
 import fr.pacifista.bot.discord.modules.core.commands.BotCommand;
 import lombok.NonNull;
 import net.dv8tion.jda.api.JDA;
@@ -15,13 +15,14 @@ import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
 import net.dv8tion.jda.api.interactions.modals.Modal;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 
 @Service
 public class CommandGiveaway extends BotCommand {
-    private final GiveawaysManager giveawaysManager;
+    private final GiveawaysService giveawaysManager;
 
-    protected CommandGiveaway(JDA jda, GiveawaysManager giveawaysManager) {
+    protected CommandGiveaway(JDA jda, GiveawaysService giveawaysManager) {
         super(jda, List.of(
                 new SubcommandData("start", "Commencer un giveaway !"),
                 new SubcommandData("roll", "Choisir les gagnants du giveaway !")
@@ -87,7 +88,8 @@ public class CommandGiveaway extends BotCommand {
     }
 
     private void rollGiveaway(@NonNull SlashCommandInteractionEvent interactionEvent) {
-        final List<Giveaway> giveawayList = this.giveawaysManager.getGiveaways();
+        final Collection<Giveaway> giveawayList = this.giveawaysManager.getEntities();
+
         if (giveawayList.isEmpty()) {
             interactionEvent.reply("Aucun giveaway n'est actuellement en cours.")
                     .setEphemeral(true)
@@ -95,13 +97,13 @@ public class CommandGiveaway extends BotCommand {
             return;
         }
 
-        StringSelectMenu.Builder menuBuilder = StringSelectMenu.create("giveaway-roll");
+        final StringSelectMenu.Builder menuBuilder = StringSelectMenu.create("giveaway-roll");
 
-        for (Giveaway gw : giveawayList) {
+        for (final Giveaway gw : giveawayList) {
             menuBuilder.addOption(
-                    gw.getPrize(),
-                    gw.getGiveawayId().toString(),
-                    String.format("ID: %s", gw.getGiveawayId())
+                    gw.getName(),
+                    gw.getId().toString(),
+                    gw.getDescription()
             );
         }
 

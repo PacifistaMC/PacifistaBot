@@ -1,8 +1,7 @@
 package fr.pacifista.bot.discord.modules.giveaway.events;
 
-import fr.pacifista.bot.core.giveaways.GiveawaysManager;
 import fr.pacifista.bot.core.giveaways.entities.Giveaway;
-import fr.pacifista.bot.core.giveaways.enums.GiveawayType;
+import fr.pacifista.bot.core.giveaways.services.GiveawaysService;
 import fr.pacifista.bot.discord.modules.core.utils.Colors;
 import fr.pacifista.bot.discord.modules.giveaway.config.BotGiveawayConfig;
 import lombok.NonNull;
@@ -11,7 +10,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
@@ -21,19 +19,18 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Slf4j(topic = "Giveaways Events")
 @Service
 public class GiveawaysEvents extends ListenerAdapter {
 
     private final BotGiveawayConfig botConfig;
-    private final GiveawaysManager giveawaysManager;
+    private final GiveawaysService giveawaysManager;
     private final Random random = new Random();
 
     public GiveawaysEvents(final JDA jda,
                            final BotGiveawayConfig botConfig,
-                           final GiveawaysManager giveawaysManager) {
+                           final GiveawaysService giveawaysManager) {
         jda.addEventListener(this);
         this.botConfig = botConfig;
         this.giveawaysManager = giveawaysManager;
