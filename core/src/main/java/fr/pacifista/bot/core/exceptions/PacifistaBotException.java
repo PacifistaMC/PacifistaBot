@@ -1,5 +1,8 @@
 package fr.pacifista.bot.core.exceptions;
 
+/**
+ * Utilisé pour les erreurs fatales du bot
+ */
 public class PacifistaBotException extends Exception {
 
     public PacifistaBotException(String message) {
